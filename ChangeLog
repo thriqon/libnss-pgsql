@@ -1,0 +1,53 @@
+2001-10-22  Joerg Wendland  <jorgland@sol.wohnheim.uni-ulm.de>
+
+	* added documentation and database example
+
+	* changes to debian packaging (see debian/changelog)
+
+	* New Version: 1.0.0
+
+2001-10-04  Joerg Wendland  <jorgland@sol.wohnheim.uni-ulm.de>
+
+	* fixed SQL statement in backend/initgroups_dyn()
+
+	* filled README
+
+2001-09-30  Bret Mogilefsky  <mogul-sysauth-pgsql@gelatinous.com>
+
+	* made config file parsing much more robust; improper
+	handling of sscanf was causing many hard-to-debug crashes when
+	config files contained blank lines.  changed back to -O2 from -g
+	
+	* complain when config file contains a line that's not understood
+	
+	* plugged MANY leaks
+
+	* now _only_ malloc for config directives, or when necessary
+	(sql_escape); should be much faster
+	
+	* added atexit() calls to do db, cfg cleanup
+	
+	* removed unused functions
+	
+	* print_err made more usable and added print_msg, which D() now uses
+	
+	
+2001-09-20  Bret Mogilefsky  <mogul-sysauth-pgsql@gelatinous.com>
+
+	* added debug messages =)
+
+	* added initgroups_dyn(); which gives massive speedup to glibc
+	initgroups() call
+
+	* fixed some leaks
+
+	* fixed use of stale pointers
+	
+	
+2001-08-27  Joerg Wendland  <joerg@joergland.wohnheim.uni-ulm.de>
+
+	* removed debug messages
+
+	* fixed getgrnam() and getpwnam() functions to correctly escape
+	user input in SQL statements
+

@@ -1,0 +1,53 @@
+libnss-pgsql (1.0.0-4) unstable; urgency=low
+
+  * rebuild against libpgsql2
+
+ -- Joerg Wendland <joergland@debian.org>  Thu,  7 Mar 2002 21:47:07 +0100
+
+libnss-pgsql (1.0.0-3) unstable; urgency=low
+
+  * re-added accidently removed binary-* targets to debian/rules
+    (Closes: #117624,#117623)
+
+ -- Joerg Wendland <joergland@debian.org>  Tue, 30 Oct 2001 13:42:05 +0100
+
+libnss-pgsql (1.0.0-2) unstable; urgency=low
+
+  * added forgotten build-dep on debiandoc-sgml (Closes: #117407)
+
+ -- Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>  Sun, 28 Oct 2001 21:02:03 +0100
+
+libnss-pgsql (1.0.0-1) unstable; urgency=low
+
+  * new upstream version
+  * included new debiandoc documentation in package
+  * cut down debian/rules to necessary rules
+  * adapted standards version 3.5.6
+  * changed debian/copyright, included Bret as upstream author and a link to GPL
+    instead of quoting GPL here
+  * debian/control Suggests: nscd, libpam-pgsql
+  * changed eMail-Address to d.o.
+
+ -- Joerg Wendland <joergland@debian.org>  Sat, 27 Oct 2001 12:20:05 +0200
+
+libnss-pgsql (0.9.2-1) unstable; urgency=low
+
+  * fixed a bug when opening config file without error checking
+  * changes due to policy violations
+
+ -- Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>  Wed, 12 Sep 2001 19:26:39 +0200
+
+libnss-pgsql (0.9.1-1) unstable; urgency=high
+
+  * security fixes
+  * better packaging
+  * moved configfile from /etc to /usr/share/<packag>/example according to
+    11.7.3 policy manual
+
+ -- Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>  Mon, 27 Aug 2001 19:07:55 +0200
+
+libnss-pgsql (0.9.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>  Mon, 20 Aug 2001 20:01:36 +0200

@@ -1,0 +1,12 @@
+This package was debianized by Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>
+on Wed, Sep 12 19:19:55 2001 +0200
+
+It was downloaded from http://sf.net/projects/sysauth-pgsql
+
+Copyright.  The following copyright applies to the entire distribution:
+
+    libnss-pgsql glibc name service switch module using PostgreSQL
+    Copyright (C) 2000-2001  Joerg Wendland, Bret Mogilefsky
+    License is GNU General Public License
+    see /usr/share/common-licenses/GPL-2 for the full license text
+

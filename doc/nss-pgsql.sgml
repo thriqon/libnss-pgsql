@@ -1,0 +1,317 @@
+<!doctype debiandoc public "-//DebianDoc//DTD DebianDoc//EN">
+<debiandoc>
+  <book>
+	 <titlepag>
+		<title>libnss-pgsql - Name Service Switch module for use with PostgreSQL</title>
+		<author>
+		  <name>Jörg Wendland</name>
+		  <email>jorgland@sol.wohnheim.uni-ulm.de</email>
+		</author>
+		<author>
+		  <name>Bret Mogilefsky</name>
+		  <email>mogul-sysauth-pgsql@gelatinous.com</email>
+		</author>
+		<version>1.0.0</version>
+		<abstract>
+		  This document covers setup and use of the Name Service Switch
+		  (NSS) Module <file>libnss-pgsql.so</file>. Its purpose is replace the
+		  flatfile user and group database in <file>/etc</file> with a
+		  relational database on a PostgreSQL server. It is highly
+		  configurable to fit onto most existing databases.
+		</abstract>
+		<copyright>
+		  <copyrightsummary>
+			 Copyright &copy; 2001 Jörg Wendland
+		  </copyrightsummary>
+		  <p>
+			 This document is licensed under the GNU Free Documentation
+			 License as can be found at
+			 <httpsite>http://www.fsf.org/licenses/licenses.html</httpsite>
+		  </p>
+		</copyright>
+	 </titlepag>
+	 <toc>
+	 <chapt>
+		<heading>Prerequisites</heading>
+		<p>
+		  For installation instructions please see the files
+		  <file>README</file> and <file>INSTALL</file> in the source
+		  distribution.
+		</p>
+		<p>
+		  To use this module you will need a PostgreSQL database
+		  containing some sort of user account information. See 
+		  <ref id="dbschema"> for an example database.
+		</p>
+	 </chapt>
+	 <chapt>
+		<heading>Module and Database Setup</heading>
+		<sect>
+		  <heading>required database structure</heading>
+		  <p>
+			 To use this module with a database you will need at least
+			 three tables in that database. One for account data (the
+			 information usually stored in <file>/etc/passwd</file>), one
+			 for group data (<file>/etc/group</file>) and another one
+			 storing information about groupmembership (there is a m:n
+			 relation between passwd and group so you need this weak
+			 entity). If you have an existing database you do not want to
+			 modify you can use views or table expressions (see 
+			 <ref id="conffile">), of course.
+		  </p>
+		  <sect1>
+			 <heading>tables and fields</heading>
+			 <p>
+				There have to be some required fields in those
+				tables. They are described below.
+			 </p>
+			 <p>passwd table (see 
+				  <manref name="getpwnam" section="3">
+				  for more information)
+				<list compact="compact">
+				  <item>
+					 <p>login name</p>
+				  </item>
+				  <item>
+					 <p>password</p>
+				  </item>
+				  <item>
+					 <p>numerical user id (uid)</p>
+				  </item>
+				  <item>
+					 <p>numerical primary group id (gid)</p>
+				  </item>
+				  <item>
+					 <p>login shell</p>
+				  </item>
+				  <item>
+					 <p>description (gecos)</p>
+				  </item>
+				  <item>
+					 <p>home directory</p>
+				  </item>
+				</list>
+			 </p>
+			 <p>group table (see <manref name="getgrnam" section="3">)
+				<list compact="compact">
+				  <item>
+					 <p>group name</p>
+				  </item>
+				  <item>
+					 <p>group password</p>
+				  </item>
+				  <item>
+					 <p>numerical group id (gid)</p>
+				  </item>
+				</list>
+			 </p>
+			 <p>
+				An example database schema can be found in 
+				<ref id="dbschema">. See there for how to construct the
+				groupmember table.
+		  </sect1>
+		</sect>
+		<sect>
+		  <heading>configuring the module</heading>
+		  <p>
+			 Having a working database, you must write your configfile
+			 <file>/etc/nss-pgsql.conf</file>. This file has a simple
+			 syntax:
+			 <example>
+LINE      := COMMENT | EMPTY | STATEMENT
+COMMENT   := '#' &lt;text&gt;
+EMPTY     := ''
+STATEMENT := KEYWORD '=' &lt;value&gt;
+			 </example>
+			 With <tt>KEYWORD</tt> being one of the following (all are
+			 required):
+			 <taglist compact="compact">
+				<tag><tt>host</tt></tag>
+				<item>
+				  <p>Hostname or IP address of PostgreSQL server.</p>
+				</item>
+				<tag><tt>port</tt></tag>
+				<item>
+				  <p>Port on which the Postmaster listens.</p>
+				</item>
+				<tag><tt>database</tt></tag>
+				<item>
+				  <p>The database name.</p>
+				</item>
+				<tag><tt>login</tt></tag>
+				<item>
+				  <p>Username for logging in to the PostgreSQL server.</p>
+				</item>
+				<tag><tt>passwd</tt></tag>
+				<item>
+				  <p>Password for logging in.</p>
+				</item>
+				<tag><tt>passwdtable</tt></tag>
+				<item>
+				  <p>Name of the table storing the account data.</p>
+				</item>
+				<tag><tt>grouptable</tt></tag>
+				<item>
+				  <p>Table storing group data.</p>
+				</item>
+				<tag><tt>groupmembertable</tt></tag>
+				<item>
+				  <p>Table storing the 'links' between account and group data.</p>
+				</item>
+				<tag><tt>passwd_name</tt></tag>
+				<item>
+				  <p>Name of field in <tt>passwdtable</tt> storing the
+					 user name.</p>
+				</item>
+				<tag><tt>passwd_passwd</tt></tag>
+				<item>
+				  <p>Field storing the password.</p>
+				</item>
+				<tag><tt>passwd_uid</tt></tag>
+				<item>
+				  <p>Field storing the numerical user id.</p>
+				</item>
+				<tag><tt>passwd_dir</tt></tag>
+				<item>
+				  <p>Field storing the <tt>$HOME</tt> directory.</p>
+				</item>
+				<tag><tt>passwd_shell</tt></tag>
+				<item>
+				  <p>Field storing the user's shell.</p>
+				</item>
+				<tag><tt>passwd_gecos</tt></tag>
+				<item>
+				  <p>Field storing additional information about this user,
+					 e.g. his full name and phone number.</p>
+				</item>
+				<tag><tt>passwd_gid</tt></tag>
+				<item>
+				  <p>Field storing the numerical primary group id.</p>
+				</item>
+				<tag><tt>group_name</tt></tag>
+				<item>
+				  <p>Name of the field in <tt>grouptable</tt> storing the
+					 group name.</p>
+				</item>
+				<tag><tt>group_passwd</tt></tag>
+				<item>
+				  <p>Field storing the groups password.</p>
+				</item>
+				<tag><tt>group_gid</tt></tag>
+				<item>
+				  <p>Field storing the group id.</p>
+				</item>
+				<tag><tt>group_member</tt></tag>
+				<item>
+				  <p>Name of field in <tt>groupmembertable</tt> storing
+					 the user name being member of the queried group.</p>
+				</item>
+			 </taglist>
+		  </p>
+		</sect>
+	 </chapt>
+	 <chapt>
+		<heading>Name Service Switch Setup</heading>
+		<p><em>WARNING</em>: You can do serious damage to your system if
+		  you do not know what you are doing! If you are trying changes
+		  in the Name Service Switch for the very first time, consider
+		  doing that in a chroot environment or a test machine. Have at
+		  least an editor with <file>/etc/nsswitch.conf</file> open to
+		  revert your changes easily. You have been warned!</p>
+		<p>
+		  Setting up the Name Service Switch is fairly easy, given a
+		  working installation of the libnss-pgsql module. Just add an
+		  entry <tt>pgsql</tt> the <tt>passwd</tt> and <tt>group</tt>
+		  lines of <file>/etc/nsswitch.conf</file>. You can tune the
+		  behaviour with options between the entries to get a fully
+		  working system. Useful lines in
+		  <file>/etc/nsswitch.conf</file> would look like these:
+		  <example>
+passwd:         compat [SUCCESS=continue] pgsql
+group:          compat [SUCCESS=continue] pgsql
+		  </example>
+		  This will make your libc look into the standard
+		  <file>passwd</file> and <file>group</file> files first, then
+		  lookup names via NIS (that is integrated in the libnss-compat
+		  modules) and then use libnss-pgsql. The option
+		  <tt>[SUCCESS=continue]</tt> ensures that all accounts or
+		  groups are retrieved when using the iteration functions
+		  <manref name="getpwent" section="3"> and 
+		  <manref name="getgrent" section="3">.
+	 </chapt>
+	 <appendix>
+		<heading>Examples</heading>
+		<sect id="dbschema">
+		  <heading>Database Schema</heading>
+		  <p>
+			 <example>
+CREATE TABLE "groups" (
+        "gid" serial NOT NULL,
+        "name" character varying(16) NOT NULL,
+        "passwd" character varying(20),
+        PRIMARY KEY ("gid")
+);
+
+CREATE TABLE "accounts" (
+        "uid" serial NOT NULL,
+        "login" character varying(8) NOT NULL,
+        "passwd" character varying(30) NOT NULL,
+        "shell" character varying DEFAULT '/bin/bash' NOT NULL,
+        "homedir" character varying NOT NULL,
+        PRIMARY KEY ("login")
+);
+
+CREATE TABLE "usergroups" (
+        "gid" int4 NOT NULL,
+        "uid" int4 NOT NULL,
+        PRIMARY KEY ("gid", "uid"),
+        CONSTRAINT "ug_gid_fkey" FOREIGN KEY ("gid")
+            REFERENCES "groups"("gid"),
+        CONSTRAINT "ug_uid_fkey" FOREIGN KEY ("uid")
+            REFERENCES "accounts"("uid")
+);
+			 </example>
+		  </p>
+		</sect>
+		<sect id="conffile">
+		  <heading>Confile File</heading>
+		  <p>
+
+			 <example>
+# database parameters
+host            = 127.0.0.1
+port            = 5432
+database        = benutzer
+login           = postgres
+passwd          = foo
+
+# the tables used (or tableexpressions!)
+passwdtable     = accounts
+grouptable      = groups
+# the next line is wrapped for readability though 
+# this is not legal in a config file
+groupmembertable = accounts JOIN usergroups ON
+     accounts.uid=usergroups.uid JOIN groups ON
+     usergroups.gid=groups.gid
+
+# fields used in passwd functions
+passwd_name     = login
+passwd_passwd   = passwd
+passwd_uid      = uid
+passwd_dir      = homedir
+passwd_shell    = shell
+passwd_gecos    = login
+passwd_gid      = uid
+
+# fields used in group functions
+group_name      = name
+group_passwd    = passwd
+group_gid       = gid
+group_member    = login
+</example>
+
+		  </p>
+		</sect>
+	 </appendix>
+  </book>
+</debiandoc>
