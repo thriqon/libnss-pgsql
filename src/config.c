@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include "nss-pgsql.h"
 
-#define HASHMAX 73
+//#define HASHMAX 73
+#define HASHMAX 150
 #define CFGLINEMAX 256
 #define CFGFILE SYSCONFDIR"/nss-pgsql.conf"
 
