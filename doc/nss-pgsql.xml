@@ -321,9 +321,47 @@ STATEMENT := KEYWORD '=' &lt;value&gt;
 	    the user name being member of the queried group.</para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
+	<term>querypasswd</term>
+	<listitem>
+	  <para>Field storing an SQL query to get passwd table, 
+	    </para>
+	</listitem>
+      </varlistentry>
+	<term>querypasswd</term>
+	<listitem>
+	  <para>Field storing an SQL query to get group table. Query returns
+           the passwd array, order (login,passwd,uid,gid,gecos,homedir,shell) is very important
+           but fields names can be whatever you want.
+           Looks like: SELECT login,passwd,uid,gid,gecos,('/var/lib/gforge/chroot/home/users/' || login),shell FROM nss_passwd 
+	   </para>
+	</listitem>
+      </varlistentry>
+	<term>querygroup</term>
+	<listitem>
+	  <para>Field storing an SQL query to get group table. Query returns
+           the group array, order (name,passwd,gid) is very important 
+           but fields names can be whatever you want.
+           Looks like: SELECT name,passwd,gid FROM nss_groups   
+	   </para>
+	</listitem>
+      </varlistentry>
+	<term>querymembers</term>
+	<listitem>
+	  <para>Field storing an SQL query to get logins of members for a given gid (%d).
+          Looks like: SELECT login FROM nss_passwd JOIN nss_usergroups ON nss_passwd.uid=nss_usergroups.uid JOIN nss_groups ON nss_usergroups.gid=nss_groups.gid WHERE nss_groups.gid = %d 
+	    </para>
+	</listitem>
+      </varlistentry>
+	<term>queryids</term>
+	<listitem>
+	  <para>Field storing an SQL query to get list of gid for a given login (%s) and gid (%d).
+          Looks like: SELECT nss_groups.gid FROM nss_passwd JOIN nss_usergroups ON nss_passwd.uid=nss_usergroups.uid JOIN nss_groups ON nss_usergroups.gid=nss_groups.gid WHERE login = '%s' AND nss_groups.gid != %d
+	    </para>
+	</listitem>
+      </varlistentry>
     </variablelist>
   </chapter>
-
   <chapter id="nss-setup">
     <title>Name Service Switch Setup</title>
 
