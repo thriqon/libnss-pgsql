@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT([nsspampgsql],[1.1],[libnsspgsql1@packages.debian.org])
+AC_INIT([nsspgsql],[1.1],[libnsspgsql1@packages.debian.org])
 AC_CONFIG_AUX_DIR([autoconf])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([AUTHORS])

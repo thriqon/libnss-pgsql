@@ -1,11 +1,13 @@
-libnss-pgsql (1.0.2-1.5) unstable; urgency=low
+libnss-pgsql (1.1-1) unstable; urgency=low
 
-  * Added support to concatenated field in conf file
-  * Added new entries in conf file to be able to write more
-    understandable sql query directly in the file. Old syntax 
-    should continue to work with extra concatenating feature.
-  * Commented some now unused code (copy_attrval_n and copy_attrval)
-    and added copy_attr_colnum to get rid of column search.
+  * Move to forked source: this package is now maintained on Alioth
+  * New release. Changes since last Debian version:
+    - Added support to concatenated field in conf file
+    - Added new entries in conf file to be able to write more
+      understandable sql query directly in the file. Old syntax 
+      should continue to work with extra concatenating feature.
+    - Commented some now unused code (copy_attrval_n and copy_attrval)
+      and added copy_attr_colnum to get rid of column search.
 
  -- Christian Bayle <bayle@debian.org>  Sun, 13 Feb 2005 10:57:58 +0100
 
