@@ -72,15 +72,24 @@ void backend_close()
 /*
  *  prepare a cursor in database
  */
-inline void backend_prepare(const char *what)
+inline enum nss_status backend_prepare(const char *what)
 {
 	 char *stmt, *cfgname;
+	PGresult *res;
+	ExecStatusType status;
 	 asprintf(&cfgname, "%stable", what);
 	 asprintf(&stmt, "DECLARE nss_pgsql_internal_%s_curs CURSOR FOR "
 				 "SELECT * FROM %s FOR READ ONLY", what, getcfg(cfgname));
-	 PQexec(_conn, stmt);
+	res=PQexec(_conn, stmt);
+	status=PQresultStatus(res);
+	PQclear(res);
 	 free(cfgname);
 	 free(stmt);
+
+	if (status==PGRES_COMMAND_OK)
+		return NSS_STATUS_SUCCESS;
+	else
+		return NSS_STATUS_UNAVAIL;
 }
 
 
@@ -149,8 +158,10 @@ enum nss_status getgroupmem(gid_t gid,
 				gid);
 	res = PQexec(_conn, stmt);
 
-	if(!PQresultStatus(res)!=PGRES_TUPLES_OK)
+	if (PQresultStatus(res)!=PGRES_TUPLES_OK) {
+		status=NSS_STATUS_UNAVAIL;
 		goto BAIL_OUT;
+	}
 
 	n = PQntuples(res);
 
@@ -193,7 +204,7 @@ enum nss_status res2grp(PGresult *res,
 {
 	enum nss_status status = NSS_STATUS_NOTFOUND;
 
-#ifdef COMMENTED_OUT
+#ifdef DEBUG
 	char **i;
 #endif	
 
@@ -211,7 +222,7 @@ enum nss_status res2grp(PGresult *res,
 
 	status = getgroupmem(result->gr_gid, result, buffer, buflen);
  
-#ifdef COMMENTED_OUT
+#ifdef DEBUG
 	print_msg("Converted a res to a grp:\n");
 	print_msg("GID: %d\n", result->gr_gid);
 	print_msg("Name: %s\n", result->gr_name);
@@ -258,7 +269,7 @@ enum nss_status res2pwd(PGresult *res, struct passwd *result,
 	result->pw_uid = (uid_t) atol(PQgetvalue(res, 0, PQfnumber(res, getcfg("passwd_uid"))));
 	result->pw_gid = (gid_t) atol(PQgetvalue(res, 0, PQfnumber(res, getcfg("passwd_gid"))));
 
-#ifdef COMMENTED_OUT
+#ifdef DEBUG
 	print_msg("Converted a res to a pwd:\n");
 	print_msg("UID: %d\n", result->pw_uid);
 	print_msg("GID: %d\n", result->pw_gid);
@@ -307,10 +318,12 @@ enum nss_status backend_getgrent(struct group *result,
 	enum nss_status status = NSS_STATUS_NOTFOUND;
 
 	res = fetch("group");
-	if(res) {
+	if (PQresultStatus(res)==PGRES_TUPLES_OK)
 		status = res2grp(res, result, buffer, buflen);
+	else
+		status = NSS_STATUS_UNAVAIL;
+
 		PQclear(res);
-	}
 	return status;
 }    
 
@@ -326,10 +339,13 @@ enum nss_status backend_getpwent(struct passwd *result,
 	enum nss_status status = NSS_STATUS_NOTFOUND;
 
 	res = fetch("passwd");
-	if(res) {
+	if (PQresultStatus(res)==PGRES_TUPLES_OK)
 		status = res2pwd(res, result, buffer, buflen);
+	else
+		status = NSS_STATUS_UNAVAIL;
+
 		PQclear(res);
-	}
+
 	return status;
 }    
 
@@ -356,7 +372,7 @@ enum nss_status backend_getpwnam(const char *name,
 				 ename);
 
 	 res = PQexec(_conn, stmt);
-	 if(res) {
+	if (PQresultStatus(res)==PGRES_TUPLES_OK) {
 		 status = res2pwd(res, result, buffer, buflen);
 		 PQclear(res);
 	 }
@@ -384,7 +400,7 @@ enum nss_status backend_getpwuid(uid_t uid,
 				 getcfg("passwd_uid"),
 				 uid);
 	 res = PQexec(_conn, stmt);
-	 if(res) {
+	 if (PQresultStatus(res)==PGRES_TUPLES_OK) {
 		 status = res2pwd(res, result, buffer, buflen);
 		 PQclear(res);
 	 }
@@ -416,10 +432,12 @@ enum nss_status backend_getgrnam(const char *name,
 				 getcfg("group_name"),
 				 ename);
 	 res = PQexec(_conn, stmt);
-	 if(res) {
+	 if (PQresultStatus(res)!=PGRES_TUPLES_OK)
+		 status = NSS_STATUS_UNAVAIL;
+	 else if (PQntuples(res)>0)
 		 status = res2grp(res, result, buffer, buflen);
+
 		 PQclear(res);
-	 }
 
 	 free(stmt);
 	 free(ename);
@@ -446,10 +464,9 @@ enum nss_status backend_getgrgid(gid_t gid,
 				 getcfg("group_gid"),
 				 gid);
 	 res = PQexec(_conn, stmt);
-	 if(res) {
+	 if(PQresultStatus(res)==PGRES_TUPLES_OK)
 		 status = res2grp(res, result, buffer, buflen);
 		 PQclear(res);
-	 }
 	 free(stmt);
     
 	 return status;
@@ -484,6 +501,12 @@ size_t backend_initgroups_dyn(const char *user,
 				 getcfg("group_gid"),
 				 group);
 	 res = PQexec(_conn, stmt);
+
+	 if (PQresultStatus(res)!=PGRES_TUPLES_OK) {
+			 PQclear(res);
+			 return 0;
+	 }
+
 
 	 rows = PQntuples(res);
 

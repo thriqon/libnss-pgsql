@@ -24,7 +24,7 @@ char *getcfg(const char *key);
 int backend_isopen(void);
 int backend_open(void);
 void backend_close(void);
-void backend_prepare(const char *what);
+enum nss_status backend_prepare(const char *what);
 
 enum nss_status backend_getpwent(struct passwd *result,
 											char *buffer,
