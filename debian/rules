@@ -7,7 +7,9 @@ export DH_COMPAT
 
 .PHONY: configure build install binary binary-indep binary-arch clean
 
-configure: configure-stamp
+configure: configure.ac
+	autoreconf -i
+
 configure-stamp:
 	dh_testdir
 	./configure \
