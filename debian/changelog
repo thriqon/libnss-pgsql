@@ -1,3 +1,28 @@
+libnss-pgsql (1.0.2-1.1) unstable; urgency=low
+
+  * Non-Maintainer Upload.
+  * Add "#define NOT_IN_libc" to src/interface.c to fix FTBFS.
+    (Closes: #221073)
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Sun, 15 Feb 2004 23:04:38 +0100
+
+libnss-pgsql (1.0.2-1) unstable; urgency=low
+
+  * New upstream version with really rebuilt autotools. (Closes: Bug#189976)
+
+ -- Joerg Wendland <joergland@debian.org>  Mon, 21 Apr 2003 17:53:59 +0200
+
+libnss-pgsql (1.0.1-1) unstable; urgency=low
+
+  * New upstream version with rebuilt autotools.
+  * Rebuild against newest libpq3. (Closes: Bug#189003)
+  * Move from non-US to main.
+  * Standards-Version 3.5.9.
+  * Remove libc6-dev from Build-Depends.
+  * DH_COMPAT=4
+
+ -- Joerg Wendland <joergland@debian.org>  Wed, 16 Apr 2003 18:50:42 +0200
+
 libnss-pgsql (1.0.0-4) unstable; urgency=low
 
   * rebuild against libpgsql2

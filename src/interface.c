@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define _LIBC
+#define NOT_IN_libc
 #include <bits/libc-lock.h>
 
 static __libc_lock_t  lock;

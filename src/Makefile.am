@@ -4,4 +4,4 @@ libnss_pgsql_la_LDFLAGS = -module -version-info 2
 EXTRA_DIST = nss-pgsql.h
 
 INCLUDES = -DLIBDIR=\"$(libdir)\" -DSYSCONFDIR=\"$(sysconfdir)\" -D_GNU_SOURCE
-CFLAGS = -O2 -Wall -Wstrict-prototypes
+AM_CFLAGS = -O2 -Wall -Wstrict-prototypes

@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 #DH_VERBOSE=0
-DH_COMPAT=3
+DH_COMPAT=4
 
 export DH_COMPAT
 

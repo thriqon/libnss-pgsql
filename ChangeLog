@@ -1,3 +1,11 @@
+2003-04-21  Joerg Wendland  <jorgland@sol.wohnheim.uni-ulm.de>
+
+	* really relibtoolize
+
+2003-04-16  Joerg Wendland  <jorgland@sol.wohnheim.uni-ulm.de>
+
+	* re-{libtoolize, aclocalize, autoconfigure, automake}
+
 2001-10-22  Joerg Wendland  <jorgland@sol.wohnheim.uni-ulm.de>
 
 	* added documentation and database example
