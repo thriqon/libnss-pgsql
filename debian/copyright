@@ -7,6 +7,7 @@ Copyright.  The following copyright applies to the entire distribution:
 
     libnss-pgsql glibc name service switch module using PostgreSQL
     Copyright (C) 2000-2001  Joerg Wendland, Bret Mogilefsky
+    Copyright (C) 2005       Wichert Akkerman, Christian Bayle
     License is GNU General Public License
     see /usr/share/common-licenses/GPL-2 for the full license text
 
