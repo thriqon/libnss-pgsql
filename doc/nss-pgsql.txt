@@ -270,5 +270,6 @@ A.2. Confile File
      Jörg Wendland <jorgland@sol.wohnheim.uni-ulm.de>
      Bret Mogilefsky <mogul-sysauth-pgsql@gelatinous.com>
 
+
      1.0.0
 
