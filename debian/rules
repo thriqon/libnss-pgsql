@@ -10,7 +10,7 @@ export DH_COMPAT
 configure: configure.ac
 	autoreconf -i
 
-configure-stamp:
+config.status: 
 	dh_testdir
 	./configure \
 		--prefix=/usr \
@@ -18,19 +18,15 @@ configure-stamp:
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
 		--sysconfdir=/etc
-	touch configure-stamp
 
-build: configure-stamp 
+build: config.status
 	dh_testdir
 	$(MAKE)
-	$(MAKE) -C doc text html
 
 clean:
 	dh_testdir
-	rm -f configure-stamp
 	-$(MAKE) distclean
-	rm -rf doc/nss-pgsql.html
-	dh_clean debian/libnss-pgsql1
+	dh_clean 
 
 install: build
 	dh_testdir
