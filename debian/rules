@@ -17,7 +17,7 @@ config.status:
 		--libdir=/lib \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
-		--docdir=\$${prefix}/share/doc/libnss-pgsql1 \
+		--with-docdir=\$${prefix}/share/doc/libnss-pgsql1 \
 		--sysconfdir=/etc
 
 build: config.status
