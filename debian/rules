@@ -1,10 +1,5 @@
 #!/usr/bin/make -f
 
-#DH_VERBOSE=0
-DH_COMPAT=4
-
-export DH_COMPAT
-
 .PHONY: configure build install binary binary-indep binary-arch clean
 
 configure: configure.ac
