@@ -344,6 +344,10 @@ enum nss_status res2grp(PGresult *res,
 #endif
 
  BAIL_OUT:
+	/* Set errnop so glibc will call the us again with a bigger buffer */
+	if (status == NSS_STATUS_TRYAGAIN)
+		*errnop = ERANGE;
+
 	return status;
 }
 
@@ -391,6 +395,10 @@ enum nss_status res2pwd(PGresult *res, struct passwd *result,
 #endif
 
  BAIL_OUT:
+	/* Set errnop so glibc will call the us again with a bigger buffer */
+	if (status == NSS_STATUS_TRYAGAIN)
+		*errnop = ERANGE;
+
 	return status;
 }
 
