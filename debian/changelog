@@ -1,3 +1,11 @@
+libnss-pgsql (1.0.2-1.4) unstable; urgency=low
+
+  * More changes: redo pretty much all the error handling. It 
+    now differentiates between empty results and real errors
+    and fixes at least one memory leak.
+
+ -- Wichert Akkerman <wichert@wiggy.net>  Thu, 11 Nov 2004 17:01:33 +0100
+
 libnss-pgsql (1.0.2-1.3) unstable; urgency=low
 
   * Use PQconnectdb instead of the obsolete PQsetdbLogin function.

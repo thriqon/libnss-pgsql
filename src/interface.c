@@ -30,8 +30,7 @@ _nss_pgsql_setpwent(void)
 		 backend_open();
   	 }
 	 if(backend_isopen()) {
-		 backend_prepare("passwd");
-		 retval = NSS_STATUS_SUCCESS;
+		 retval = backend_prepare("passwd");
 	 }
 	 __libc_lock_unlock(lock);
 
@@ -121,7 +120,7 @@ _nss_pgsql_setgrent(void)
 		 backend_open();
   	 }
 	 if(backend_isopen()) {
-		 backend_prepare("group");
+		 retval = backend_prepare("group");
 		 retval = NSS_STATUS_SUCCESS;
 	 }
 	 __libc_lock_unlock(lock);
