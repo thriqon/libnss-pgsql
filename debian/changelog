@@ -1,3 +1,16 @@
+libnss-pgsql (1.0.2-1.2) unstable; urgency=low
+
+  * Fix handling of empty groups using patch from Florian Zumbiehl.
+    Closes: Bug#204367
+  * Add a postinst to restart nscd if it is installed and running
+  * Modify debian/rules a bit to not use a build-stamp file so one
+    does not have to delete it every time when debugging things
+  * Drop dh_testroot from clean target: if you are not root it will
+    fail anyway and since almost everyone uses fakeroot to build packages
+    it is rarely useful
+
+ -- Wichert Akkerman <wichert@wiggy.net>  Sun, 26 Sep 2004 23:08:43 +0200
+
 libnss-pgsql (1.0.2-1.1) unstable; urgency=low
 
   * Non-Maintainer Upload.

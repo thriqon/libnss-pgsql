@@ -18,17 +18,14 @@ configure-stamp:
 		--sysconfdir=/etc
 	touch configure-stamp
 
-build: configure-stamp build-stamp
-build-stamp:
+build: configure-stamp 
 	dh_testdir
 	$(MAKE)
-	cd doc && $(MAKE) text html
-	touch build-stamp
+	$(MAKE) -C doc text html
 
 clean:
 	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f configure-stamp
 	-$(MAKE) distclean
 	rm -rf doc/nss-pgsql.html
 	dh_clean debian/libnss-pgsql1

@@ -145,10 +145,10 @@ enum nss_status getgroupmem(gid_t gid,
 				gid);
 	res = PQexec(_conn, stmt);
 
-	n = PQntuples(res);
-
-	if(!n)
+	if(!PQresultStatus(res)!=PGRES_TUPLES_OK)
 		goto BAIL_OUT;
+
+	n = PQntuples(res);
 
 	// Make sure there's enough room for the array of pointers to group member names
 	ptrsize = (n+1) * sizeof(const char *);
@@ -161,6 +161,8 @@ enum nss_status getgroupmem(gid_t gid,
 
 	buffer += ptrsize;
 	buflen -= ptrsize;
+
+	status = NSS_STATUS_SUCCESS;
 
 	for(t = 0; t < n; t++) {
 		status = copy_attrval_n(res, "group_member", &(result->gr_mem[t]), &buffer, &buflen, t);
