@@ -324,12 +324,6 @@ STATEMENT := KEYWORD '=' &lt;value&gt;
       <varlistentry>
 	<term>querypasswd</term>
 	<listitem>
-	  <para>Field storing an SQL query to get passwd table, 
-	    </para>
-	</listitem>
-      </varlistentry>
-	<term>querypasswd</term>
-	<listitem>
 	  <para>Field storing an SQL query to get group table. Query returns
            the passwd array, order (login,passwd,uid,gid,gecos,homedir,shell) is very important
            but fields names can be whatever you want.
@@ -337,6 +331,7 @@ STATEMENT := KEYWORD '=' &lt;value&gt;
 	   </para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
 	<term>querygroup</term>
 	<listitem>
 	  <para>Field storing an SQL query to get group table. Query returns
@@ -346,6 +341,7 @@ STATEMENT := KEYWORD '=' &lt;value&gt;
 	   </para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
 	<term>querymembers</term>
 	<listitem>
 	  <para>Field storing an SQL query to get logins of members for a given gid (%d).
@@ -353,6 +349,7 @@ STATEMENT := KEYWORD '=' &lt;value&gt;
 	    </para>
 	</listitem>
       </varlistentry>
+      <varlistentry>
 	<term>queryids</term>
 	<listitem>
 	  <para>Field storing an SQL query to get list of gid for a given login (%s) and gid (%d).
