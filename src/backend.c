@@ -311,7 +311,8 @@ enum nss_status getgroupmem(gid_t gid,
 enum nss_status res2grp(PGresult *res,
 								struct group *result,
 								char *buffer,
-								size_t buflen)
+								size_t buflen,
+								int *errnop)
 {
 	enum nss_status status = NSS_STATUS_NOTFOUND;
 #ifdef DEBUG
@@ -356,7 +357,8 @@ enum nss_status res2grp(PGresult *res,
  */
 enum nss_status res2pwd(PGresult *res, struct passwd *result,
 								char *buffer,
-								size_t buflen)
+								size_t buflen,
+								int *errnop)
 {
 	enum nss_status status = NSS_STATUS_NOTFOUND;
 
@@ -437,7 +439,7 @@ enum nss_status backend_getgrent(struct group *result,
 
 	res = fetch("group");
 	if (PQresultStatus(res)==PGRES_TUPLES_OK)
-		status = res2grp(res, result, buffer, buflen);
+		status = res2grp(res, result, buffer, buflen, errnop);
 	else
 		status = NSS_STATUS_UNAVAIL;
 
@@ -458,7 +460,7 @@ enum nss_status backend_getpwent(struct passwd *result,
 
 	res = fetch("passwd");
 	if (PQresultStatus(res)==PGRES_TUPLES_OK)
-		status = res2pwd(res, result, buffer, buflen);
+		status = res2pwd(res, result, buffer, buflen, errnop);
 	else
 		status = NSS_STATUS_UNAVAIL;
 
@@ -506,7 +508,7 @@ enum nss_status backend_getpwnam(const char *name,
 
 	 res = PQexec(_conn, stmt);
 	if (PQresultStatus(res)==PGRES_TUPLES_OK) {
-		 status = res2pwd(res, result, buffer, buflen);
+		 status = res2pwd(res, result, buffer, buflen, errnop);
 		 PQclear(res);
 	 }
 	 free(stmt);
@@ -549,7 +551,7 @@ enum nss_status backend_getpwuid(uid_t uid,
 	//print_msg("backend_getpwuid :: %s\n",stmt); //CB
 	 res = PQexec(_conn, stmt);
 	 if (PQresultStatus(res)==PGRES_TUPLES_OK) {
-		 status = res2pwd(res, result, buffer, buflen);
+		 status = res2pwd(res, result, buffer, buflen, errnop);
 		 PQclear(res);
 	 }
 	 free(stmt);
@@ -594,7 +596,7 @@ enum nss_status backend_getgrnam(const char *name,
 	 if (PQresultStatus(res)!=PGRES_TUPLES_OK)
 		 status = NSS_STATUS_UNAVAIL;
 	 else if (PQntuples(res)>0)
-		 status = res2grp(res, result, buffer, buflen);
+		 status = res2grp(res, result, buffer, buflen, errnop);
 
 		 PQclear(res);
 
@@ -635,7 +637,7 @@ enum nss_status backend_getgrgid(gid_t gid,
 	//print_msg("%s backend_getgrgid\n",stmt); //CB
 	 res = PQexec(_conn, stmt);
 	 if(PQresultStatus(res)==PGRES_TUPLES_OK)
-		 status = res2grp(res, result, buffer, buflen);
+		 status = res2grp(res, result, buffer, buflen, errnop);
 		 PQclear(res);
 	 free(stmt);
     
