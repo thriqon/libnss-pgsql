@@ -1,3 +1,11 @@
+libnss-pgsql (1.0.2-1.3) unstable; urgency=low
+
+  * Use PQconnectdb instead of the obsolete PQsetdbLogin function.
+    This also fixes a problem with accessing postgres after changing
+    uid. Based on patch from Christian Bayle. Closes: Bug#279581
+
+ -- Wichert Akkerman <wichert@wiggy.net>  Thu, 11 Nov 2004 15:39:12 +0100
+
 libnss-pgsql (1.0.2-1.2) unstable; urgency=low
 
   * Fix handling of empty groups using patch from Florian Zumbiehl.

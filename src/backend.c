@@ -32,12 +32,16 @@ int backend_open()
 {
 	if(!_isopen) {
 		if(readconfig()) {
-			_conn = PQsetdbLogin(getcfg("host"),
+			char* conninfo;
+			asprintf(&conninfo,
+				"host=%s port=%s dbname=%s user=%s password=%s",
+				getcfg("host"),
 										getcfg("port"),
-										"", "",
 										getcfg("database"),
 										getcfg("login"),
 										getcfg("passwd"));
+			_conn = PQconnectdb(conninfo);
+			free(conninfo);
 			if(PQstatus(_conn) == CONNECTION_OK) {
 				PQexec(_conn, "BEGIN TRANSACTION");
 				_isopen++;
