@@ -5,6 +5,13 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([AUTHORS])
 AC_CONFIG_HEADER([config.h])
 
+# Extra configure arguments
+AC_ARG_WITH(docdir,
+	AS_HELP_STRING([--with-docdir],
+			   [Documentation directory (default is $prefix/doc)]),
+	[ac_cv_docdir=$withval], [ac_cv_docdir=$prefix/doc])
+AC_SUBST(docdir, [$ac_cv_docdir])
+
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_AWK

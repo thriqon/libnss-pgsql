@@ -3,9 +3,9 @@ TARGETS	= nss-pgsql.html
 all html: $(TARGETS)
 
 install-data-local: $(TARGETS)
-	$(mkinstalldirs) $(DESTDIR)/$(prefix)/doc
-	$(INSTALL_DATA) nss-pgsql.html $(DESTDIR)/$(prefix)/doc
-	$(INSTALL_DATA) $(srcdir)/caution.png $(DESTDIR)/$(prefix)/doc
+	$(mkinstalldirs) $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) nss-pgsql.html $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/caution.png $(DESTDIR)$(docdir)
 
 clean-local:
 	rm -f $(TARGETS)
