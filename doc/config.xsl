@@ -8,7 +8,7 @@
 
   <!-- Turn on admonition graphics. -->
   <xsl:param name="admon.graphics" select="'1'"/>
-  <xsl:param name="admon.graphics.path">/images/</xsl:param>
+  <xsl:param name="admon.graphics.path"></xsl:param>
 
   <!-- HTML generation toggles -->
   <xsl:param name="make.valid.html" select="1"/>
