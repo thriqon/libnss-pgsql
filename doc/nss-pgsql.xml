@@ -373,7 +373,7 @@ group:  files [SUCCESS=continue] pgsql
 
   </chapter>
 
-  <appendix>
+  <appendix id="appendix">
     <title>Examples</title>
 
     <example id="dbschema">
