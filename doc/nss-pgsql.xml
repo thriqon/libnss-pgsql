@@ -1,0 +1,448 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book id="nsspampgsql">
+  <bookinfo>
+    <title>NSS/PAM PgSQL</title>
+
+    <authorgroup>
+      <author>
+	<firstname>Jörg</firstname>
+	<surname>Wendland</surname>
+	<affiliation>
+	  <address>
+	    <email>jorgland@sol.wohnheim.uni-ulm.de</email>
+	  </address>
+	</affiliation>
+      </author>
+      <author>
+	<firstname>Bret</firstname>
+	<surname>Mogilefsky</surname>
+	<affiliation>
+	  <address>
+	    <email>mogul-sysauth-pgsql@gelatinous.com</email>
+	  </address>
+	</affiliation>
+      </author>
+      <author>
+	<firstname>Wichert</firstname>
+	<surname>Akkerman</surname>
+	<affiliation>
+	  <address>
+	    <email>wichert@wiggy.net</email>
+	  </address>
+	</affiliation>
+      </author>
+      <author>
+	<firstname>Christian</firstname>
+	<surname>Bayle</surname>
+	<affiliation>
+	  <address>
+	    <email>bayle@debian.org</email>
+	  </address>
+	</affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2001</year>
+      <year>2004</year>
+      <year>2005</year>
+      <holder>Jörg Wendland</holder>
+      <holder>Wichert Akkerman</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation. There
+	are no invariant sections. A copy of the license is included in the
+	section entitled "GNU Free Documentation License".
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <preface id="preface">
+    <title>Preface</title>
+
+    <para>
+      This document covers setup and use of the Name Service Switch (NSS)
+      Module <filename>libnss-pgsql.so</filename>. Its purpose is replace the
+      flatfile user and group database in <filename>/etc</filename> with a
+      relational database on a PostgreSQL server. It is highly configurable to
+      fit onto most existing databases.
+    </para>
+  </preface>
+
+  <toc/>
+
+  <chapter id="prerequisites">
+    <title>Prerequisites</title>
+
+    <para>
+      For installation instructions please see the files
+      <filename>README</filename> and <filename>INSTALL</filename> in the
+      source distribution.
+    </para>
+
+    <para>
+      To use this module you will need a PostgreSQL database containing some
+      sort of user account information. See <xref linkend="dbschema"/> for an
+      example database.
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Module and Database Setup</title>
+
+    <section id="dbstructure">
+      <title>required database structure</title>
+
+      <para>
+	To use this module with a database you will need at least three tables
+	in that database. One for account data (the information usually stored
+	in <filename>/etc/passwd</filename>), one for group data
+	(<filename>/etc/group</filename>) and another one storing information
+	about groupmembership (there is a m:n relation between passwd and group
+	so you need this weak entity). If you have an existing database you do
+	not want to modify you can use views or table expressions (see 
+	<xref linkend="conffile"/>), of course.
+      </para>
+
+      <section id="tables">
+	<title>tables and fields</title>
+
+	<para>
+	  There have to be some required fields in those tables. They are
+	  described below.
+	</para>
+
+	<variablelist>
+	  <varlistentry>
+	    <term>passwd table (see <citerefentry>
+		<refentrytitle>getpwnam</refentrytitle>
+		<manvolnum>3</manvolnum></citerefentry>
+	      for more information)</term>
+	    <listitem>
+	      <itemizedlist>
+		<listitem>
+		  <para>login name</para>
+		</listitem>
+		<listitem>
+		  <para>password</para>
+		</listitem>
+		<listitem>
+		  <para>numerical user id (uid)</para>
+		</listitem>
+		<listitem>
+		  <para>numerical primary group id (gid)</para>
+		</listitem>
+		<listitem>
+		  <para>login shell</para>
+		</listitem>
+		<listitem>
+		  <para>description (gecos)</para>
+		</listitem>
+		<listitem>
+		  <para>home directory</para>
+		</listitem>
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>group table (see <citerefentry>
+		<refentrytitle>getgrnam</refentrytitle>
+		<manvolnum>3</manvolnum></citerefentry>)</term>
+	    <listitem>
+	      <itemizedlist>
+		<listitem>
+		  <para>group name</para>
+		</listitem>
+		<listitem>
+		  <para>group password</para>
+		</listitem>
+		<listitem>
+		  <para>numerical group id (gid)</para>
+		</listitem>
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+
+	<para>
+	  An example database schema can be found in <xref
+	    linkend="dbschema"/>. See there for how to construct the
+	  groupmember table.
+	</para>
+      </section>
+    </section>
+  </chapter>
+
+  <chapter id="configuration">
+    <title>configuring the module</title>
+
+    <para>
+      Having a working database, you must write your configfile
+      <filename>/etc/nss-pgsql.conf</filename>. This file has a simple syntax:
+    </para>
+
+    <informalexample>
+      <programlisting>
+LINE      := COMMENT | EMPTY | STATEMENT
+COMMENT   := '#' &lt;text&gt;
+EMPTY     := ''
+STATEMENT := KEYWORD '=' &lt;value&gt;
+</programlisting>
+    </informalexample>
+
+    <para>
+      With <command>KEYWORD</command> being one of the following (all are
+      required):
+    </para>
+
+    <variablelist>
+      <varlistentry>
+	<term>host</term>
+	<listitem>
+	  <para>Hostname or IP address of PostgreSQL server.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>port</term>
+	<listitem>
+	  <para>Port on which the Postmaster listens.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>database</term>
+	<listitem>
+	  <para>The database name.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>login</term>
+	<listitem>
+	  <para>Username for logging in to the PostgreSQL server.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd</term>
+	<listitem>
+	  <para>Password for logging in.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwdtable</term>
+	<listitem>
+	  <para>Name of the table storing the account data.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>grouptable</term>
+	<listitem>
+	  <para>Table storing group data.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>groupmembertable</term>
+	<listitem>
+	  <para>Table storing the 'links' between account and group data.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_name</term>
+	<listitem>
+	  <para>Name of field in <command>passwdtable</command> storing the
+	    user name.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_passwd</term>
+	<listitem>
+	  <para>Field storing the password.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_uid</term>
+	<listitem>
+	  <para>Field storing the numerical user id.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_dir</term>
+	<listitem>
+	  <para>Field storing the <command>$HOME</command> directory.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_shell</term>
+	<listitem>
+	  <para>Field storing the user's shell.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_gecos</term>
+	<listitem>
+	  <para>Field storing additional information about this user,
+	    e.g. his full name and phone number.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>passwd_gid</term>
+	<listitem>
+	  <para>Field storing the numerical primary group id.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>group_name</term>
+	<listitem>
+	  <para>Name of the field in <command>grouptable</command> storing the
+	    group name.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>group_passwd</term>
+	<listitem>
+	  <para>Field storing the groups password.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>group_gid</term>
+	<listitem>
+	  <para>Field storing the group id.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>group_member</term>
+	<listitem>
+	  <para>Name of field in <command>groupmembertable</command> storing
+	    the user name being member of the queried group.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </chapter>
+
+  <chapter id="nss-setup">
+    <title>Name Service Switch Setup</title>
+
+    <caution>
+      <para>
+	You can do serious damage to your system if you do not know what you
+	are doing! If you are trying changes in the Name Service Switch for the
+	very first time, consider doing that in a chroot environment or a test
+	machine. Have at least an editor with
+	<filename>/etc/nsswitch.conf</filename> open to revert your changes
+	easily. You have been warned!
+      </para>
+    </caution>
+
+    <para>
+      Setting up the Name Service Switch is fairly easy, given a
+      working installation of the libnss-pgsql module. Just add an
+      entry <command>pgsql</command> the <command>passwd</command> and
+      <command>group</command> lines of
+      <filename>/etc/nsswitch.conf</filename>. You can tune the behaviour with
+      options between the entries to get a fully working system. Useful lines
+      in <filename>/etc/nsswitch.conf</filename> would look like these:
+    </para>
+
+    <informalexample>
+      <programlisting>
+passwd: files [SUCCESS=continue] pgsql
+group:  files [SUCCESS=continue] pgsql
+</programlisting>
+    </informalexample>
+
+    <para>
+      This will make your libc look into the standard
+      <filename>passwd</filename> and <filename>group</filename> files first
+      and then use libnss-pgsql. The option
+      <command>[SUCCESS=continue]</command> ensures that all accounts or groups
+      are retrieved when using the iteration functions
+      <citerefentry>
+	<refentrytitle>getpwent</refentrytitle>
+	<manvolnum>3</manvolnum>
+      </citerefentry> and
+      <citerefentry>
+	<refentrytitle>getgrent</refentrytitle>
+	<manvolnum>3</manvolnum>
+      </citerefentry>.
+    </para>
+
+  </chapter>
+
+  <appendix>
+    <title>Examples</title>
+
+    <example id="dbschema">
+      <title>Database schema</title>
+      <programlisting>
+CREATE TABLE "groups" (
+        "gid" serial NOT NULL,
+        "name" character varying(16) NOT NULL,
+        "passwd" character varying(20),
+        PRIMARY KEY ("gid")
+);
+
+CREATE TABLE "accounts" (
+        "uid" serial NOT NULL,
+        "login" character varying(8) NOT NULL,
+        "passwd" character varying(30) NOT NULL,
+        "shell" character varying DEFAULT '/bin/bash' NOT NULL,
+        "homedir" character varying NOT NULL,
+        PRIMARY KEY ("login")
+);
+
+CREATE TABLE "usergroups" (
+        "gid" int4 NOT NULL,
+        "uid" int4 NOT NULL,
+        PRIMARY KEY ("gid", "uid"),
+        CONSTRAINT "ug_gid_fkey" FOREIGN KEY ("gid")
+            REFERENCES "groups"("gid"),
+        CONSTRAINT "ug_uid_fkey" FOREIGN KEY ("uid")
+            REFERENCES "accounts"("uid")
+);
+</programlisting>
+    </example>
+
+    <example id="conffile">
+      <title>Configuration file</title>
+      <programlisting>
+# database parameters
+host            = 127.0.0.1
+port            = 5432
+database        = benutzer
+login           = postgres
+passwd          = foo
+
+# the tables used (or tableexpressions!)
+passwdtable     = accounts
+grouptable      = groups
+# the next line is wrapped for readability though 
+# this is not legal in a config file
+groupmembertable = accounts JOIN usergroups ON
+     accounts.uid=usergroups.uid JOIN groups ON
+     usergroups.gid=groups.gid
+
+# fields used in passwd functions
+passwd_name     = login
+passwd_passwd   = passwd
+passwd_uid      = uid
+passwd_dir      = homedir
+passwd_shell    = shell
+passwd_gecos    = login
+passwd_gid      = uid
+
+# fields used in group functions
+group_name      = name
+group_passwd    = passwd
+group_gid       = gid
+group_member    = login
+</programlisting>
+    </example>
+  </appendix>
+</book>
+<!-- vi: sw=2
+  -->

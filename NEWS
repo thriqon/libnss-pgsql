@@ -1,6 +1,7 @@
 1.1
 	* Forked from the SourceForge project
 	* port to current autoconf & automake version
+	* Convert documentation to DocBook
 
 
 2001-10-04
