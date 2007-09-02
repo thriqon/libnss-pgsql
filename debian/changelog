@@ -15,7 +15,7 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
   * Pull in setgrent deadlock patch as 02_fix_retcode.dpatch. Closes: #329467.
   * Merge postgresql-dev change.  Closes: #429979, #429187.
 
- -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 11:23:35 -0400
+ -- Mark Hymers <mhy@debian.org>  Sun, 02 Sep 2007 16:38:05 +0100
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 
