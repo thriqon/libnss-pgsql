@@ -6,9 +6,11 @@ Uploaders: Christian Bayle <bayle@debian.org>, Joerg Wendland <joergland@debian.
 Build-Depends: debhelper (>= 4.0), libpq-dev, debiandoc-sgml, automake1.9, autoconf (>=2.59a), xmlto, dpatch
 Standards-Version: 3.7.2
 
-Package: libnss-pgsql1
+Package: libnss-pgsql2
 Architecture: any
 Depends: ${shlibs:Depends}
+Conflicts: libnss-pgsql1
+Replaces: libnss-pgsql1
 Suggests: nscd, libpam-pgsql
 Description: name service switch module using PostgreSQL
  This module works as a replacement for the flat file databases /etc/passwd,
