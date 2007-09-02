@@ -4,10 +4,7 @@
 
 include /usr/share/dpatch/dpatch.make
 
-configure: configure.ac
-	autoreconf -i
-
-config.status: patch
+config.status: patch-stamp
 	dh_testdir
 	./configure \
 		--prefix=/usr \
@@ -17,27 +14,35 @@ config.status: patch
 		--with-docdir=\$${prefix}/share/doc/libnss-pgsql1 \
 		--sysconfdir=/etc
 
-build: config.status
+build: build-stamp
+
+build-stamp: config.status
 	dh_testdir
 	$(MAKE)
+	touch $@
 
 clean: unpatch
 	dh_testdir
-	-$(MAKE) distclean
+ifeq (Makefile, $(wildcard Makefile))
+	$(MAKE) distclean
+endif
 	dh_clean 
+	rm -f build-stamp install-stamp
 
-install: build
+install: install-stamp
+
+install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
-	dh_clean -k
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	touch $@
 
 binary: binary-arch binary-indep
 
 binary-indep:
 
-binary-arch: build install
+binary-arch: build-stamp install-stamp
 	dh_testdir
 	dh_testroot
 	dh_movefiles
