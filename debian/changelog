@@ -7,9 +7,10 @@ libnss-pgsql (1.4.0-1) unstable; urgency=low
   * Add dpatch support
   * Acknowledge previous NMUs.
   * Pull in FTBFS patch for amd64 as 01_fix_locks.dpatch. Closes: #285431.
-  * Pull in setgrent deadlock patch as 02_fix_retcode.dpatch. Closes: #329467. 
+  * Pull in setgrent deadlock patch as 02_fix_retcode.dpatch. Closes: #329467.
+  * Merge postgresql-dev change.  Closes: #429979, #429187. 
 
- -- Mark Hymers <mhy@debian.org>  Sun, 02 Sep 2007 15:44:12 +0100
+ -- Mark Hymers <mhy@debian.org>  Sun, 02 Sep 2007 15:47:08 +0100
 
 libnss-pgsql (1.3.2-0.1) unstable; urgency=medium
 

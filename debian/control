@@ -1,10 +1,10 @@
 Source: libnss-pgsql
 Section: admin
 Priority: extra
-Maintainer: Wichert Akkerman <wichert@wiggy.net>
-Uploaders: Christian Bayle <bayle@debian.org>, Joerg Wendland <joergland@debian.org>
-Build-Depends: debhelper (>= 4.0), postgresql-dev (>= 7.1), debiandoc-sgml, automake1.9, autoconf (>=2.59a), xmlto
-Standards-Version: 3.6.1
+Maintainer: Debian Nss/Pgsql Developers <libnss-pgsql@packages.debian.org>
+Uploaders: Christian Bayle <bayle@debian.org>, Joerg Wendland <joergland@debian.org>, Stephen Gran <sgran@debian.org>, Martin Krafft <madduck@debian.org>
+Build-Depends: debhelper (>= 4.0), libpq-dev, debiandoc-sgml, automake1.9, autoconf (>=2.59a), xmlto
+Standards-Version: 3.6.2.2
 
 Package: libnss-pgsql1
 Architecture: any
