@@ -13,9 +13,9 @@
 #include "nss-pgsql.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
+#include "libc-lock.h"
 
-static pthread_mutex_t lock;
+static __libc_lock_t  lock = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * passwd functions
@@ -25,12 +25,12 @@ _nss_pgsql_setpwent(void)
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		getent_prepare("allusers");
 		retval = NSS_STATUS_SUCCESS;
 	}
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -38,10 +38,10 @@ _nss_pgsql_setpwent(void)
 enum nss_status
 _nss_pgsql_endpwent(void)
 {
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	getent_close(CONNECTION_USERGROUP);
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return NSS_STATUS_SUCCESS;
 }
@@ -52,7 +52,7 @@ _nss_pgsql_getpwent_r(struct passwd *result, char *buffer,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 
 	// Make sure the database is opened in case no one has called setpwent()
 	if(!backend_isopen(CONNECTION_USERGROUP)) {
@@ -62,7 +62,7 @@ _nss_pgsql_getpwent_r(struct passwd *result, char *buffer,
 	if(backend_open(CONNECTION_USERGROUP)) {
 		retval = backend_getpwent(result, buffer, buflen, errnop);
 	}
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -73,12 +73,12 @@ _nss_pgsql_getpwnam_r(const char *pwnam, struct passwd *result,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		retval = backend_getpwnam(pwnam, result, buffer, buflen, errnop);
 	}
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -89,12 +89,12 @@ _nss_pgsql_getpwuid_r(uid_t uid, struct passwd *result, char *buffer,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		retval = backend_getpwuid(uid, result, buffer, buflen, errnop);
 	}
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -107,23 +107,23 @@ _nss_pgsql_setgrent(void)
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		getent_prepare("allgroups");
 		retval = NSS_STATUS_SUCCESS;
 	} 
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
-	return retval;
+	return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
 _nss_pgsql_endgrent(void)
 {
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	getent_close(CONNECTION_USERGROUP);
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return NSS_STATUS_SUCCESS;
 }
@@ -134,7 +134,7 @@ _nss_pgsql_getgrent_r(struct group *result, char *buffer,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 
 	// Make sure the database is opened in case no one has called setpwent()
 	if(!backend_isopen(CONNECTION_USERGROUP)) {
@@ -144,7 +144,7 @@ _nss_pgsql_getgrent_r(struct group *result, char *buffer,
 	if(backend_isopen(CONNECTION_USERGROUP)) {
 		retval = backend_getgrent(result, buffer, buflen, errnop);
 	}
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -155,12 +155,12 @@ _nss_pgsql_getgrnam_r(const char *grnam, struct group *result,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		retval = backend_getgrnam(grnam, result, buffer, buflen, errnop);
 	} 
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -171,12 +171,12 @@ _nss_pgsql_getgrgid_r(uid_t gid, struct group *result,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		retval = backend_getgrgid(gid, result, buffer, buflen, errnop);
 	}
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -189,14 +189,14 @@ _nss_pgsql_initgroups_dyn(const char *user, gid_t group, long int *start,
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 	size_t numgroups;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_USERGROUP)) {
 		numgroups = backend_initgroups_dyn(user, group, start, size, groupsp,
 		                                   limit, errnop);
 		retval = (numgroups > 0) ? NSS_STATUS_SUCCESS : NSS_STATUS_NOTFOUND;
 	}
 	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -209,12 +209,12 @@ _nss_pgsql_setspent(void)
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_SHADOW)) {
 		getent_prepare("shadow");
 		retval = NSS_STATUS_SUCCESS;
 	}
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -222,10 +222,10 @@ _nss_pgsql_setspent(void)
 enum nss_status
 _nss_pgsql_endspent(void)
 {
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	getent_close(CONNECTION_SHADOW);
 	backend_close(CONNECTION_SHADOW);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return NSS_STATUS_SUCCESS;
 }
@@ -236,7 +236,7 @@ _nss_pgsql_getspent_r(struct spwd *result, char *buffer,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 
 	// Make sure the database is opened in case no one has called setspent()
 	if(!backend_isopen(CONNECTION_SHADOW)) {
@@ -247,7 +247,7 @@ _nss_pgsql_getspent_r(struct spwd *result, char *buffer,
 		retval = backend_getspent(result, buffer, buflen, errnop);
 	}
 
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
@@ -258,12 +258,12 @@ _nss_pgsql_getspnam_r(const char *spnam, struct spwd *result,
 {
 	enum nss_status retval = NSS_STATUS_UNAVAIL;
 
-	pthread_mutex_lock(&lock);
+	__libc_lock_lock(lock);
 	if(backend_open(CONNECTION_SHADOW)) {
 		retval = backend_getspnam(spnam, result, buffer, buflen, errnop);
 	}
 	backend_close(CONNECTION_SHADOW);
-	pthread_mutex_unlock(&lock);
+	__libc_lock_unlock(lock);
 
 	return retval;
 }
