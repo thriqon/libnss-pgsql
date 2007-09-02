@@ -1,7 +1,9 @@
-libnss-pgsql (1.4.0-2) unstable; urgency=low
+libnss-pgsql (1.4.0debian-1) unstable; urgency=low
 
   [ Stephen Gran ]
-  * New usptream
+  * Bump version number so that we can reupload orig tarball - somehow in the
+    upload to experimental, a regular file got replaced with a symlink, and
+    now the package is unbuildable without reuploading the orig.  
 
   [ Mark Hymers ]
   * Add dpatch support
