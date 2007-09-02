@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian Nss/Pgsql Developers <libnss-pgsql@packages.debian.org>
 Uploaders: Christian Bayle <bayle@debian.org>, Joerg Wendland <joergland@debian.org>, Stephen Gran <sgran@debian.org>, Martin Krafft <madduck@debian.org>
 Build-Depends: debhelper (>= 4.0), libpq-dev, debiandoc-sgml, automake1.9, autoconf (>=2.59a), xmlto, dpatch
-Standards-Version: 3.6.2.2
+Standards-Version: 3.7.2
 
 Package: libnss-pgsql1
 Architecture: any
