@@ -13,7 +13,7 @@
  #include <stdio.h>
  #include <stdlib.h>
 -#include "libc-lock.h"
-+#include "pthread.h"
++#include <pthread.h>
  
 -static __libc_lock_t  lock = PTHREAD_MUTEX_INITIALIZER;
 +static pthread_mutex_t lock;
