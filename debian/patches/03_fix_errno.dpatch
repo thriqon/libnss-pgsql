@@ -1,0 +1,115 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 03-fix-errno.dpatch by Stephen Gran <sgran@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Save value of *errnop for return to c library.  Prevents other 
+## DP: function calls from clobbering and preventing try again from 
+## DP: working.
+
+@DPATCH@
+Index: src/interface.c
+===================================================================
+--- a/src/interface.c	(revision 69)
++++ b/src/interface.c	(working copy)
+@@ -133,8 +133,9 @@
+                       size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+	pthread_mutex_lock(&lock);
+ 
+ 	// Make sure the database is opened in case no one has called setpwent()
+ 	if(!backend_isopen(CONNECTION_USERGROUP)) {
+@@ -144,8 +145,10 @@
+ 	if(backend_isopen(CONNECTION_USERGROUP)) {
+ 		retval = backend_getgrent(result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+@@ -154,14 +157,17 @@
+                       char *buffer, size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+	pthread_mutex_lock(&lock);
+ 	if(backend_open(CONNECTION_USERGROUP)) {
+ 		retval = backend_getgrnam(grnam, result, buffer, buflen, errnop);
+ 	} 
++	localerrno = *errnop;
+ 	backend_close(CONNECTION_USERGROUP);
+	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+@@ -170,14 +176,17 @@
+                       char *buffer, size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+	pthread_mutex_lock(&lock);
+ 	if(backend_open(CONNECTION_USERGROUP)) {
+ 		retval = backend_getgrgid(gid, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	backend_close(CONNECTION_USERGROUP);
+	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+Index: src/backend.c
+===================================================================
+--- a/src/backend.c	(revision 69)
++++ b/src/backend.c	(working copy)
+@@ -232,6 +232,7 @@
+ 	int n, t = 0;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
+ 	size_t ptrsize;
++	int localerrno;
+ 
+ 	params[0] = malloc(12);
+ 	n = snprintf(params[0], 12, "%d", gid);
+@@ -283,8 +284,10 @@
+ 	
+  BAIL_OUT:
+ 
++        localerrno = *errnop;
+ 	PQclear(res);
+ 	free(params[0]);
++	*errnop = localerrno;
+ 
+ 	return status;
+ }
+@@ -475,6 +478,7 @@
+ 	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
+ 		res = putback("allgroups");
+ 		PQclear(res);
++		*errnop = ERANGE;
+ 	}
+ 	return status;
+ }    
+@@ -713,11 +717,13 @@
+ 	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 		status = res2shadow(res, result, buffer, buflen, errnop);
+ 	}
++	int localerrno = *errnop;
+ 	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
+ 		res = putback("shadow");
+ 		PQclear(res);
+ 	}
+ 	PQclear(res);
++	*errnop = localerrno;
+ 	return status;
+ }    
+ 
