@@ -31,12 +31,15 @@ be considered for the next release.  If you are using the cache, and at
 some point `config.cache' contains results you don't want to keep, you
 may remove or edit it.
 
-   The file `configure.ac' (or `configure.in') is used to create
+   The file `configure.ac' is used to create
 `configure' by a program called `autoconf'.  You only need
 `configure.ac' if you want to change it or regenerate `configure' using
 a newer version of `autoconf'.
 
 The simplest way to compile this package is:
+
+  0. If you are running a download from CVS, use 'autoreconf -i' before
+     proceeding to step 1.
 
   1. `cd' to the directory containing the package's source code and type
      `./configure' to configure the package for your system.  If you're

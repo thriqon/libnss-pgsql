@@ -5,21 +5,23 @@ This is a so called Name Service Switch (NSS) Module for use with glibc.
 With it you can replace /etc/passwd, /etc/shadow, /etc/group etc. with
 a PostgreSQL database. Note that you need another piece of software, a
 plugin to the Pluggable Authentication Modules (PAM) that lets you
-authenticate against this database. It is also available from
+authenticate against this database. It is available from
 
-  http://sourceforge.net/projects/sysauth-pgsql
+  http://pgfoundry.org/projects/sysauth
 
 1. Prerequisites
 -------------------------------------------------------------
 
-You will a current glibc (I tested on 2.2) and at least the PostgreSQL
-client library (libpq, version 7 or higher) on your system to use this
+You will a current glibc (I tested on 2.3) and at least the PostgreSQL
+client library (libpq, version 7.4 or higher) on your system to use this
 module. Systems tested:
 
+ - Gentoo GNU/Linux
+   libpq MUST be compiled with thread-safety
  - Debian GNU/Linux 3.0 aka woody
    just 'apt-get install libnss-pgsql1' from unstable :)
-
- - RPMs for ... to come
+ - Ubuntu 5.10 Breezy
+   just 'apt-get install libnss-pgsql1' from universe
 
 2. Installation
 -------------------------------------------------------------
@@ -44,7 +46,8 @@ found in the file INSTALL):
  - As root type 'make install' to install the module to whatever
    directory you gave as --libdir to configure.
 
- - Have a look at conf/nss-pgsql.conf for a sample configfile.
+ - Have a look at conf/nss-pgsql.conf, conf/nss-pgsql-root.conf
+   and conf/dbschema.sql for a sample configuration.
 
 3. Setup your System
 -------------------------------------------------------------
@@ -55,6 +58,12 @@ properly written. Then you can include the module in your
 Don't forget to have a root console open before playing around
 with NSS because you can lock yourself out of your computer!
 
+To use shadow system, you must be create the table for shadow passwd.
+Your nss-pgsql-root.conf is properly written, and you make it readable
+only by root.
+ # chmod 600 /etc/nss-pgsql-root.conf
+ # chown root:root /etc/nss-pgsql-root.conf
+
 4. Where to get more information
 -------------------------------------------------------------
 
@@ -62,3 +71,4 @@ Consult the glibc documentation for more information on NSS.
 
 
 2001-10-04, Joerg
+2004-09-27, Russell Smith
