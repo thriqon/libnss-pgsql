@@ -2,10 +2,12 @@
 
 .PHONY: configure build install binary binary-indep binary-arch clean
 
+include /usr/share/dpatch/dpatch.make
+
 configure: configure.ac
 	autoreconf -i
 
-config.status: 
+config.status: patch
 	dh_testdir
 	./configure \
 		--prefix=/usr \
@@ -19,7 +21,7 @@ build: config.status
 	dh_testdir
 	$(MAKE)
 
-clean:
+clean: unpatch
 	dh_testdir
 	-$(MAKE) distclean
 	dh_clean 
