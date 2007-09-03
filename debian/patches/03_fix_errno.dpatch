@@ -7,11 +7,9 @@
 ## DP: working.
 
 @DPATCH@
-Index: src/interface.c
-===================================================================
---- a/src/interface.c	(revision 69)
-+++ b/src/interface.c	(working copy)
-@@ -140,6 +140,7 @@
+--- a/src/interface.c	2007-09-02 21:10:40.000000000 -0400
++++ b/src/interface.c	2007-09-02 21:10:19.000000000 -0400
+@@ -53,6 +53,7 @@
                        size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
@@ -19,18 +17,75 @@ Index: src/interface.c
  
  	if (pthread_mutex_trylock(&lock))
  		return NSS_STATUS_TRYAGAIN;
-@@ -152,8 +153,10 @@
+@@ -65,8 +66,10 @@
+ 	if(backend_open(CONNECTION_USERGROUP)) {
+ 		retval = backend_getpwent(result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+@@ -75,15 +78,18 @@
+                       char *buffer, size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
+ 	if(backend_open(CONNECTION_USERGROUP)) {
+ 		retval = backend_getpwnam(pwnam, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	backend_close(CONNECTION_USERGROUP);
+ 	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+@@ -92,15 +98,18 @@
+                       size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
+ 	if(backend_open(CONNECTION_USERGROUP)) {
+ 		retval = backend_getpwuid(uid, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	backend_close(CONNECTION_USERGROUP);
+ 	pthread_mutex_unlock(&lock);
+ 
++	*errnop = localerrno;
+ 	return retval;
+ }
+ 
+@@ -140,6 +149,7 @@
+                       size_t buflen, int *errnop)
+ {
+ 	enum nss_status retval = NSS_STATUS_UNAVAIL;
++	int localerrno;
+ 
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
+@@ -152,8 +162,10 @@
  	if(backend_isopen(CONNECTION_USERGROUP)) {
  		retval = backend_getgrent(result, buffer, buflen, errnop);
  	}
 +	localerrno = *errnop;
  	pthread_mutex_unlock(&lock);
  
-+        *errnop = localerrno;
++	*errnop = localerrno;
  	return retval;
  }
  
-@@ -162,15 +165,18 @@
+@@ -162,15 +174,18 @@
                        char *buffer, size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
@@ -45,11 +100,11 @@ Index: src/interface.c
  	backend_close(CONNECTION_USERGROUP);
  	pthread_mutex_unlock(&lock);
  
-+        *errnop = localerrno;
++	*errnop = localerrno;
  	return retval;
  }
  
-@@ -179,15 +185,18 @@
+@@ -179,15 +194,18 @@
                        char *buffer, size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
@@ -68,10 +123,8 @@ Index: src/interface.c
  	return retval;
  }
  
-Index: src/backend.c
-===================================================================
---- a/src/backend.c	(revision 69)
-+++ b/src/backend.c	(working copy)
+--- a/src/backend.c	2007-09-02 21:10:29.000000000 -0400
++++ b/src/backend.c	2007-09-02 21:10:14.000000000 -0400
 @@ -232,6 +232,7 @@
  	int n, t = 0;
  	enum nss_status status = NSS_STATUS_NOTFOUND;
@@ -84,26 +137,160 @@ Index: src/backend.c
  	
   BAIL_OUT:
  
-+        localerrno = *errnop;
++	localerrno = *errnop;
  	PQclear(res);
  	free(params[0]);
 +	*errnop = localerrno;
  
  	return status;
  }
-@@ -475,6 +478,7 @@
+@@ -465,17 +468,20 @@
+ {
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+    	*errnop = 0;
+ 	res = fetch("allgroups");
+ 	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 		status = res2grp(res, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	PQclear(res);
  	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
  		res = putback("allgroups");
  		PQclear(res);
-+		*errnop = ERANGE;
  	}
++	*errnop = localerrno;
  	return status;
  }    
-@@ -713,11 +717,13 @@
+ 
+@@ -489,16 +495,19 @@
+ {
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+ 	res = fetch("allusers");
+ 	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 		status = res2pwd(res, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
++	PQclear(res);
+ 	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
+ 		res = putback("allusers");
+ 	}
+ 
+-	PQclear(res);
++	*errnop = localerrno;
+ 	return status;
+ }    
+ 
+@@ -511,6 +520,7 @@
+ 	const char *params[1];
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+ 	params[0] = name;
+ 
+@@ -519,8 +529,11 @@
+ 		// Fill result structure with data from the database
+ 		status = res2pwd(res, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 
+ 	PQclear(res);
++
++	*errnop = localerrno;
+ 	return status;
+ }
+ 
+@@ -534,12 +547,13 @@
+ 	int n;
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+    
+    	params[0] = malloc(12);
+ 	n = snprintf(params[0], 12, "%d", uid);
+ 	if (n == -1 || n > 12) {
+ 		status = NSS_STATUS_UNAVAIL;
+-		*errnop = EAGAIN;
++		localerrno = EAGAIN;
+ 	} else {
+ 		res = PQexecParams(_conn, getcfg("getpwuid"), 1, NULL, (const char**)params, NULL, NULL, 0);
+ 
+@@ -547,9 +561,12 @@
+ 			// Fill result structure with data from the database
+ 			status = res2pwd(res, result, buffer, buflen, errnop);
+ 		}
++		localerrno = *errnop;
+ 		PQclear(res);
+     }
+ 	free(params[0]);
++
++	*errnop = localerrno;
+ 	return status;
+ }
+ 
+@@ -565,6 +582,7 @@
+ 	const char *params[1];
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+    	*errnop = 0;
+ 	params[0] = name;
+@@ -573,8 +591,10 @@
+ 	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 		status = res2grp(res, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	PQclear(res);
+ 
++	*errnop = localerrno;
+ 	return status;
+ }
+ 
+@@ -592,21 +612,24 @@
+ 	PGresult *res;
+ 	int n;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+    
+    	*errnop = 0;
+    	params[0] = malloc(12);
+ 	n = snprintf(params[0], 12, "%d", gid);
+ 	if (n == -1 || n > 12) {
+ 		status = NSS_STATUS_UNAVAIL;
+-		*errnop = EAGAIN;
++		localerrno = EAGAIN;
+ 	} else {
+ 		res = PQexecParams(_conn, getcfg("getgrgid"), 1, NULL, (const char**)params, NULL, NULL, 0);
+ 
+ 		if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 			status = res2grp(res, result, buffer, buflen, errnop);
+ 		}
++		localerrno = *errnop;
+ 		PQclear(res);
+ 	}
++	*errnop = localerrno;
+ 	return status;
+ }
+ 
+@@ -708,16 +731,20 @@
+ {
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+ 	res = fetch("shadow");
  	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
  		status = res2shadow(res, result, buffer, buflen, errnop);
  	}
-+	int localerrno = *errnop;
++	
++	localerrno = *errnop;
  	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
  		res = putback("shadow");
  		PQclear(res);
@@ -112,4 +299,23 @@ Index: src/backend.c
 +	*errnop = localerrno;
  	return status;
  }    
+ 
+@@ -730,6 +757,7 @@
+ 	const char *params[1];
+ 	PGresult *res;
+ 	enum nss_status status = NSS_STATUS_NOTFOUND;
++	int localerrno;
+ 
+ 	params[0] = name;
+ 
+@@ -738,8 +766,10 @@
+ 	if(PQresultStatus(res) == PGRES_TUPLES_OK) {
+ 		status = res2shadow(res, result, buffer, buflen, errnop);
+ 	}
++	localerrno = *errnop;
+ 	PQclear(res);
+     
++	*errnop = localerrno;
+ 	return status;
+ }
  
