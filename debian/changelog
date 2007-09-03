@@ -16,8 +16,11 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
     twice.
   * Add 03_fix_errno.dpatch to save value of *errnop, so that libc sees the
     ERANGE we mean to return
+  * Update 01_fix_locks.dpatch to use pthreaad_mutex_trylock, and return try
+    again on failure.  This is an attempt (possibly not the best one) to avoid
+    dead locks in nss routines we have experienced on alioth.
 
- -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 18:12:28 -0400
+ -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 20:43:35 -0400
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 

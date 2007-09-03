@@ -8,7 +8,7 @@
 
 --- old/src/interface.c	14 May 2005 09:52:02 -0000	1.5
 +++ new/src/interface.c	4 Oct 2005 09:44:24 -0000
-@@ -114,7 +114,7 @@
+@@ -120,7 +120,7 @@
  	} 
  	pthread_mutex_unlock(&lock);
  

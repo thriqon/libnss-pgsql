@@ -11,58 +11,58 @@ Index: src/interface.c
 ===================================================================
 --- a/src/interface.c	(revision 69)
 +++ b/src/interface.c	(working copy)
-@@ -133,8 +133,9 @@
+@@ -140,6 +140,7 @@
                        size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
-	pthread_mutex_lock(&lock);
- 
- 	// Make sure the database is opened in case no one has called setpwent()
- 	if(!backend_isopen(CONNECTION_USERGROUP)) {
-@@ -144,8 +145,10 @@
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
+@@ -152,8 +153,10 @@
  	if(backend_isopen(CONNECTION_USERGROUP)) {
  		retval = backend_getgrent(result, buffer, buflen, errnop);
  	}
 +	localerrno = *errnop;
-	pthread_mutex_unlock(&lock);
+ 	pthread_mutex_unlock(&lock);
  
-+	*errnop = localerrno;
++        *errnop = localerrno;
  	return retval;
  }
  
-@@ -154,14 +157,17 @@
+@@ -162,15 +165,18 @@
                        char *buffer, size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
-	pthread_mutex_lock(&lock);
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrnam(grnam, result, buffer, buflen, errnop);
  	} 
 +	localerrno = *errnop;
  	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+ 	pthread_mutex_unlock(&lock);
  
-+	*errnop = localerrno;
++        *errnop = localerrno;
  	return retval;
  }
  
-@@ -170,14 +176,17 @@
+@@ -179,15 +185,18 @@
                        char *buffer, size_t buflen, int *errnop)
  {
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
-	pthread_mutex_lock(&lock);
+ 	if (pthread_mutex_trylock(&lock))
+ 		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrgid(gid, result, buffer, buflen, errnop);
  	}
 +	localerrno = *errnop;
  	backend_close(CONNECTION_USERGROUP);
-	pthread_mutex_unlock(&lock);
+ 	pthread_mutex_unlock(&lock);
  
 +	*errnop = localerrno;
  	return retval;
