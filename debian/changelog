@@ -2,12 +2,13 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
 
   [ Mark Hymers ]
   * Add dpatch support
-  * Acknowledge previous NMUs.
+  * Acknowledge previous NMUs (closes: #273555).
   * Pull in FTBFS patch for amd64 as 01_fix_locks.dpatch. Closes: #285431.
   * Pull in setgrent deadlock patch as 02_fix_retcode.dpatch. Closes: #329467.
   * Merge postgresql-dev change.  (closes: #429979, #429187, #409767, #396574)
 
   [ Stephen Gran ]
+  * New upstream version targetted at unstable (closes: #363590)
   * Remove wiggy from the Maintainer field (closes: #432255)
   * Bump version number so that we can reupload orig tarball - somehow in the
     upload to experimental, a regular file got replaced with a symlink, and
@@ -24,10 +25,10 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
     queries
   * Using the pthread functions instead of __libc_lock directly should fix the
     FTBFS (closes: 427506, #233141)
-  * Bug in old version no longer present, do not know when it was fixed. 
+  * Bug in old version no longer present, do not know when it was fixed.
     (closes: #278389)
 
- -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 23:17:47 -0400
+ -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 23:31:55 -0400
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 
