@@ -5,9 +5,10 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
   * Acknowledge previous NMUs.
   * Pull in FTBFS patch for amd64 as 01_fix_locks.dpatch. Closes: #285431.
   * Pull in setgrent deadlock patch as 02_fix_retcode.dpatch. Closes: #329467.
-  * Merge postgresql-dev change.  Closes: #429979, #429187.
+  * Merge postgresql-dev change.  (closes: #429979, #429187, #409767, #396574)
 
   [ Stephen Gran ]
+  * Remove wiggy from the Maintainer field (closes: #432255)
   * Bump version number so that we can reupload orig tarball - somehow in the
     upload to experimental, a regular file got replaced with a symlink, and
     now the package is unbuildable without reuploading the orig.
@@ -15,12 +16,18 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
   * Depend on foo-stamp targets in debian/rules so as not to rebuild things
     twice.
   * Add 03_fix_errno.dpatch to save value of *errnop, so that libc sees the
-    ERANGE we mean to return
+    ERANGE we mean to return (closes: #426179)
   * Update 01_fix_locks.dpatch to use pthreaad_mutex_trylock, and return try
     again on failure.  This is an attempt (possibly not the best one) to avoid
     dead locks in nss routines we have experienced on alioth.
+  * Add 04_use_array_for_getgrent.dpatch for a little performance on group
+    queries
+  * Using the pthread functions instead of __libc_lock directly should fix the
+    FTBFS (closes: 427506, #233141)
+  * Bug in old version no longer present, do not know when it was fixed. 
+    (closes: #278389)
 
- -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 20:43:35 -0400
+ -- Stephen Gran <sgran@debian.org>  Sun,  2 Sep 2007 23:17:47 -0400
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 
