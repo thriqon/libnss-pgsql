@@ -1,0 +1,123 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 04_use_array_for_getgrent.dpatch by Stephen Gran <sgran@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Use a single lookup for all groups, instead of one to seed the 
+## DP: list and one for each group found.
+
+@DPATCH@
+--- a/src/backend.c	2007-09-02 21:55:33.000000000 -0400
++++ b/src/backend.c	2007-09-02 22:14:39.000000000 -0400
+@@ -23,6 +23,7 @@
+ #define GROUP_NAME   0
+ #define GROUP_PASSWD 1
+ #define GROUP_GID    2
++#define GROUP_MEM    3
+ /* define passwd column names */
+ #define PASSWD_NAME   0
+ #define PASSWD_PASSWD 1
+@@ -218,6 +219,85 @@
+ 	return NSS_STATUS_SUCCESS;
+ }
+ 
++enum nss_status
++copy_attr_grouparray(char *sptr,
++                                  char **valptr, char **buffer, size_t *buflen, int *errnop)
++{
++	size_t slen;
++	
++	slen = strlen(sptr);
++	if(*buflen < slen+1) {
++		*errnop = ERANGE;
++		return NSS_STATUS_TRYAGAIN;
++	}
++	strncpy(*buffer, sptr, slen);
++	(*buffer)[slen] = '\0';
++	
++	
++	*valptr = *buffer;
++	
++	*buffer += slen + 1;
++	*buflen -= slen + 1;
++	
++	return NSS_STATUS_SUCCESS;
++}
++
++
++enum nss_status getgroupmemarray(PGresult *res, 
++                                 struct group *result, 
++                                 char *buffer, size_t buflen, int row, int *errnop)
++{
++	char *sptr, *saveptr;
++	int end = 0;
++	int n;
++	int t;
++
++	enum nss_status status = NSS_STATUS_NOTFOUND;
++	size_t ptrsize;
++
++        // TODO - parse array member and get number of elements
++
++	sptr = PQgetvalue(res, row, GROUP_MEM);
++	end = strlen(sptr) - 1;
++
++	if (end < 2) {
++		end = 0;
++	}
++	char *token[end+1];
++	if ( (0 == strncmp(sptr, "{", 1)) && (0 == strncmp(sptr+end, "}", 1)) ) {
++		sptr[end] = '\0';
++		sptr++;
++	}
++	for (n = 0 ; ; sptr = NULL, n++) {
++		if ( (token[n] = strtok_r(sptr, ",", &saveptr) ) == NULL )
++		break;
++	}
++
++	// Make sure there's enough room for the array of pointers to group member names
++	ptrsize = (n+1) * sizeof(const char *);
++	if(buflen < ptrsize) {
++		status = NSS_STATUS_TRYAGAIN;
++		*errnop = ERANGE;
++		return status;
++	}
++
++	result->gr_mem = (char**)buffer;
++
++	buffer += (ptrsize+3)&(~0x3);
++	buflen -= (ptrsize+3)&(~0x3);
++
++	status = NSS_STATUS_SUCCESS;
++
++	for(t = 0; t < n; t++) {
++		status = copy_attr_grouparray(token[t], &(result->gr_mem[t]), &buffer, &buflen, errnop);
++		if(status != NSS_STATUS_SUCCESS)
++			return status;
++	}
++	result->gr_mem[t] = NULL;
++
++	return status;
++}
++
+ 
+ /*
+  * return array of strings containing usernames that are member of group with gid 'gid'
+@@ -319,7 +399,8 @@
+ 
+ 	result->gr_gid = (gid_t)strtoul(PQgetvalue(res, 0, GROUP_GID), (char**)NULL, 10);
+ 
+-	status = getgroupmem(result->gr_gid, result, buffer, buflen, errnop);
++	status = getgroupmemarray(res, result, buffer, buflen, 0, errnop);
++	if(status != NSS_STATUS_SUCCESS) goto BAIL_OUT;
+ 
+ #ifdef DEBUG
+ 	if (status == NSS_STATUS_SUCCESS) {
+@@ -477,7 +558,7 @@
+ 	}
+ 	localerrno = *errnop;
+ 	PQclear(res);
+-	if (status == NSS_STATUS_TRYAGAIN && *errnop == ERANGE) {
++	if (status == NSS_STATUS_TRYAGAIN && localerrno == ERANGE) {
+ 		res = putback("allgroups");
+ 		PQclear(res);
+ 	}
