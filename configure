@@ -19784,7 +19784,8 @@ fi
 
 
 
-for ac_header in stdlib.h string.h unistd.h nss.h
+
+for ac_header in stdlib.h string.h unistd.h nss.h pthread.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -19929,6 +19930,9 @@ fi
 done
 
 
+if test "x$ac_cv_header_pthread_h" = xyes; then
+  CFLAGS="$CFLAGS -lpthread"
+fi
 # Checks for typedefs, structures, and compiler characteristics.
 { echo "$as_me:$LINENO: checking for an ANSI C-conforming const" >&5
 echo $ECHO_N "checking for an ANSI C-conforming const... $ECHO_C" >&6; }
