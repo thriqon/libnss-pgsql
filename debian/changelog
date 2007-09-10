@@ -30,8 +30,11 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
   * Add AM_MAINTAINER_MODE
   * autoreconf
   * Drop Build-Dep on autotools
+  * Use dh_install instead of dh_movefiles
+  * Increase debian/compat to 5 and bump versioned Build-Dependency on
+    debhelper
 
- -- Stephen Gran <sgran@debian.org>  Tue, 04 Sep 2007 02:57:28 +0100
+ -- Stephen Gran <sgran@debian.org>  Mon, 10 Sep 2007 01:10:06 +0100
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 
