@@ -11,7 +11,7 @@ config.status: patch-stamp
 		--libdir=/lib \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
-		--with-docdir=\$${prefix}/share/doc/libnss-pgsql1 \
+		--with-docdir=\$${prefix}/share/doc/libnss-pgsql2 \
 		--sysconfdir=/etc
 
 build: build-stamp
@@ -35,7 +35,10 @@ install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_installdirs
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/libnss-pgsql2
+	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.la
+	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.a
+	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.so
 	touch $@
 
 binary: binary-arch binary-indep
@@ -46,10 +49,8 @@ binary-arch: build-stamp install-stamp
 	dh_testdir
 	dh_testroot
 	dh_installdocs
-	dh_install
 	dh_installchangelogs debian/changelog
 	dh_installexamples
-	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
