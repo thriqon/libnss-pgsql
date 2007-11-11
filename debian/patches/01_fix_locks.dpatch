@@ -25,7 +25,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		getent_prepare("allusers");
@@ -41,7 +41,7 @@
  _nss_pgsql_endpwent(void)
  {
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	getent_close(CONNECTION_USERGROUP);
  	backend_close(CONNECTION_USERGROUP);
@@ -55,7 +55,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  
  	// Make sure the database is opened in case no one has called setpwent()
@@ -74,7 +74,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getpwnam(pwnam, result, buffer, buflen, errnop);
@@ -90,7 +90,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getpwuid(uid, result, buffer, buflen, errnop);
@@ -106,7 +106,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		getent_prepare("allgroups");
@@ -122,7 +122,7 @@
  _nss_pgsql_endgrent(void)
  {
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	getent_close(CONNECTION_USERGROUP);
  	backend_close(CONNECTION_USERGROUP);
@@ -136,7 +136,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  
  	// Make sure the database is opened in case no one has called setpwent()
@@ -155,7 +155,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrnam(grnam, result, buffer, buflen, errnop);
@@ -171,7 +171,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrgid(gid, result, buffer, buflen, errnop);
@@ -187,7 +187,7 @@
  	size_t numgroups;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		numgroups = backend_initgroups_dyn(user, group, start, size, groupsp,
@@ -205,7 +205,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_SHADOW)) {
  		getent_prepare("shadow");
@@ -221,7 +221,7 @@
  _nss_pgsql_endspent(void)
  {
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	getent_close(CONNECTION_SHADOW);
  	backend_close(CONNECTION_SHADOW);
@@ -235,7 +235,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  
  	// Make sure the database is opened in case no one has called setspent()
@@ -254,7 +254,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
  
 -	__libc_lock_lock(lock);
-+	if (pthread_mutex_trylock(&lock))
++	if (pthread_mutex_lock(&lock))
 +		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_SHADOW)) {
  		retval = backend_getspnam(spnam, result, buffer, buflen, errnop);

@@ -15,7 +15,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
 @@ -65,8 +66,10 @@
  	if(backend_open(CONNECTION_USERGROUP)) {
@@ -34,7 +34,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getpwnam(pwnam, result, buffer, buflen, errnop);
@@ -53,7 +53,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getpwuid(uid, result, buffer, buflen, errnop);
@@ -72,7 +72,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
 @@ -152,8 +162,10 @@
  	if(backend_isopen(CONNECTION_USERGROUP)) {
@@ -91,7 +91,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrnam(grnam, result, buffer, buflen, errnop);
@@ -110,7 +110,7 @@
  	enum nss_status retval = NSS_STATUS_UNAVAIL;
 +	int localerrno;
  
- 	if (pthread_mutex_trylock(&lock))
+ 	if (pthread_mutex_lock(&lock))
  		return NSS_STATUS_TRYAGAIN;
  	if(backend_open(CONNECTION_USERGROUP)) {
  		retval = backend_getgrgid(gid, result, buffer, buflen, errnop);
