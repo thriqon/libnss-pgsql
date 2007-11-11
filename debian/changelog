@@ -33,8 +33,9 @@ libnss-pgsql (1.4.0debian-1) unstable; urgency=low
   * Use dh_install instead of dh_movefiles
   * Increase debian/compat to 5 and bump versioned Build-Dependency on
     debhelper
+  * Add version script
 
- -- Stephen Gran <sgran@debian.org>  Mon, 10 Sep 2007 01:10:06 +0100
+ -- Stephen Gran <sgran@debian.org>  Sun, 11 Nov 2007 11:30:32 +0000
 
 libnss-pgsql (1.4.0-1) experimental; urgency=low
 
