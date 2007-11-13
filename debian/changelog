@@ -1,8 +1,10 @@
 libnss-pgsql (1.4.0debian-2) unstable; urgency=low
 
   * Make default schema useable (closes: #355329, #364462, #364889)
+  * Change short description to be more uniform with other NSS library
+    descriptions (closes: #314911)
 
- -- Stephen Gran <sgran@debian.org>  Tue, 13 Nov 2007 00:22:58 +0000
+ -- Stephen Gran <sgran@debian.org>  Tue, 13 Nov 2007 00:25:09 +0000
 
 libnss-pgsql (1.4.0debian-1) unstable; urgency=low
 

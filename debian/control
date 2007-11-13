@@ -13,6 +13,6 @@ Conflicts: libnss-pgsql1
 Replaces: libnss-pgsql1
 Provides: libnss-pgsql1
 Suggests: nscd, libpam-pgsql
-Description: name service switch module using PostgreSQL
+Description: NSS module for using PostgreSQL as a naming service
  This module works as a replacement for the flat file databases /etc/passwd,
  /etc/group etc. It is a plugin to glibc's name service switch.
