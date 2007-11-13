@@ -2,3 +2,4 @@
 02_fix_retcode
 03_fix_errno
 04_use_array_for_getgrent
+05_schema_fixup
