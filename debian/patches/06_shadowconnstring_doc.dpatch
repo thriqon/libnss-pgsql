@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 06_shadowconnstring_doc.dpatch by Stephen Gran <sgran@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Correct documentation about connection information variable
+
+@DPATCH@
+Index: doc/nss-pgsql.xml
+===================================================================
+--- a/doc/nss-pgsql.xml	(revision 95)
++++ b/doc/nss-pgsql.xml	(revision 96)
+@@ -419,7 +419,7 @@
+ # example configfile for PostgreSQL NSS module
+ # this file must be readable for root only
+ 
+-connectionstring        = hostaddr=127.0.0.1 dbname=unix user=postgres connect_timeout=1
++shadowconnectionstring        = hostaddr=127.0.0.1 dbname=unix user=postgres connect_timeout=1
+ 
+ #Query in the following format
+ #shadow_name, shadow_passwd, shadow_lstchg, shadow_min, shadow_max, shadow_warn, shadow_inact, shadow_expire, shadow_flag
