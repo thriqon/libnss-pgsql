@@ -2,8 +2,9 @@ libnss-pgsql (1.4.0debian-3) unstable; urgency=low
 
   * Remove Joerg from uploaders.  Thanks for your work! (closes: #473330,
     #472241)
+  * Use shadowconnectionstring in shadow example (closes: #494196)
 
- -- Stephen Gran <sgran@debian.org>  Sun, 28 Sep 2008 13:26:22 +0100
+ -- Stephen Gran <sgran@debian.org>  Sun, 28 Sep 2008 13:28:17 +0100
 
 libnss-pgsql (1.4.0debian-2) unstable; urgency=low
 
