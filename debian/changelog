@@ -1,3 +1,9 @@
+libnss-pgsql (1.4.0debian-4) experimental; urgency=low
+
+  * Add myself to uploaders.
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 26 Sep 2010 20:23:18 +0200
+
 libnss-pgsql (1.4.0debian-3) unstable; urgency=low
 
   * Remove Joerg from uploaders.  Thanks for your work! (closes: #473330,
