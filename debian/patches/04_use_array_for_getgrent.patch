@@ -1,13 +1,8 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 04_use_array_for_getgrent.dpatch by Stephen Gran <sgran@debian.org>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Use a single lookup for all groups, instead of one to seed the 
-## DP: list and one for each group found.
-
-@DPATCH@
---- a/src/backend.c	2007-09-02 21:55:33.000000000 -0400
-+++ b/src/backend.c	2007-09-02 22:14:39.000000000 -0400
+Author: Stephen Gran <sgran@debian.org>
+Description: Use a single lookup for all groups, instead of one to seed the 
+list and one for each group found.
+--- a/src/backend.c
++++ b/src/backend.c
 @@ -23,6 +23,7 @@
  #define GROUP_NAME   0
  #define GROUP_PASSWD 1
@@ -25,7 +20,7 @@
 +                                  char **valptr, char **buffer, size_t *buflen, int *errnop)
 +{
 +	size_t slen;
-+	
++
 +	slen = strlen(sptr);
 +	if(*buflen < slen+1) {
 +		*errnop = ERANGE;
@@ -33,19 +28,19 @@
 +	}
 +	strncpy(*buffer, sptr, slen);
 +	(*buffer)[slen] = '\0';
-+	
-+	
++
++
 +	*valptr = *buffer;
-+	
++
 +	*buffer += slen + 1;
 +	*buflen -= slen + 1;
-+	
++
 +	return NSS_STATUS_SUCCESS;
 +}
 +
 +
-+enum nss_status getgroupmemarray(PGresult *res, 
-+                                 struct group *result, 
++enum nss_status getgroupmemarray(PGresult *res,
++                                 struct group *result,
 +                                 char *buffer, size_t buflen, int row, int *errnop)
 +{
 +	char *sptr, *saveptr;
@@ -121,10 +116,8 @@
  		res = putback("allgroups");
  		PQclear(res);
  	}
-Index: conf/nss-pgsql.conf
-===================================================================
---- a/conf/nss-pgsql.conf	(revision 74)
-+++ b/conf/nss-pgsql.conf	(working copy)
+--- a/conf/nss-pgsql.conf
++++ b/conf/nss-pgsql.conf
 @@ -11,9 +11,9 @@
  # All users
  allusers        = SELECT username, passwd, gecos, homedir, shell, uid, gid FROM passwd_table

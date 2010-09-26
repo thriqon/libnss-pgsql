@@ -1,14 +1,7 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 07_fix_table_names.dpatch by Stephen Gran <sgran@debian.org>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Correct documentation about foreign key references
-
-@DPATCH@
-Index: conf/dbschema.sql
-===================================================================
---- a/conf/dbschema.sql	(revision 96)
-+++ b/conf/dbschema.sql	(working copy)
+Author: Stephen Gran <sgran@debian.org>
+Description: Correct documentation about foreign key references
+--- a/conf/dbschema.sql
++++ b/conf/dbschema.sql
 @@ -26,8 +26,8 @@
  	"gid" int4 NOT NULL,
  	"uid" int4 NOT NULL,
@@ -20,10 +13,8 @@ Index: conf/dbschema.sql
  );
    
  CREATE TABLE "shadow_table" (
-Index: doc/nss-pgsql.xml
-===================================================================
---- a/doc/nss-pgsql.xml	(revision 97)
-+++ b/doc/nss-pgsql.xml	(working copy)
+--- a/doc/nss-pgsql.xml
++++ b/doc/nss-pgsql.xml
 @@ -374,8 +374,8 @@
  	"gid" int4 NOT NULL,
  	"uid" int4 NOT NULL,

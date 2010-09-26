@@ -1,13 +1,7 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 01-fix-locks.dpatch by Andreas Jochens <aj@andaco.de>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Use pthreads interface.  Taken from Debian Bug #273800.
-
-@DPATCH@
-
---- old/src/interface.c	(revision 47)
-+++ new/src/interface.c	(working copy)
+Author: Andreas Jochens <aj@andaco.de>
+Description: Use pthreads interface.  Taken from Debian Bug #273800.
+--- a/src/interface.c
++++ b/src/interface.c
 @@ -13,9 +13,9 @@
  #include "nss-pgsql.h"
  #include <stdio.h>

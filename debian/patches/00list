@@ -1,7 +1,0 @@
-01_fix_locks
-02_fix_retcode
-03_fix_errno
-04_use_array_for_getgrent
-05_schema_fixup
-06_shadowconnstring_doc
-07_fix_table_names

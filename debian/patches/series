@@ -1,0 +1,7 @@
+01_fix_locks.patch
+02_fix_retcode.patch
+03_fix_errno.patch
+04_use_array_for_getgrent.patch
+05_schema_fixup.patch
+06_shadowconnstring_doc.patch
+07_fix_table_names.patch

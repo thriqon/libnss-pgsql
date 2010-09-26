@@ -1,0 +1,13 @@
+Author: Stephen Gran <sgran@debian.org>
+Description: Correct primary key declaration
+--- a/conf/dbschema.sql
++++ b/conf/dbschema.sql
+@@ -19,7 +19,7 @@
+ 	"gecos" character varying(128),
+ 	"homedir" character varying(256) NOT NULL,
+ 	"shell" character varying DEFAULT '/bin/bash' NOT NULL,
+-	PRIMARY KEY ("username")
++	PRIMARY KEY ("uid")
+ );
+ 
+ CREATE TABLE "usergroups" (

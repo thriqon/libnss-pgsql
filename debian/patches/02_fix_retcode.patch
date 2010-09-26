@@ -1,0 +1,13 @@
+Author: Øyvind Møll <oyvind@moll.no>
+Description: Fix return code.  Taken from debian bug: #329467.
+--- a/src/interface.c
++++ b/src/interface.c
+@@ -120,7 +120,7 @@
+ 	} 
+ 	pthread_mutex_unlock(&lock);
+ 
+-	return NSS_STATUS_SUCCESS;
++	return retval;
+ }
+ 
+ enum nss_status
