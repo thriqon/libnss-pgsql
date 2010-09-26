@@ -1,0 +1,17 @@
+libnss_pgsql.so.2 libnss-pgsql2 #MINVER#
+ NSSPGSQL_2.0@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_endgrent@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_endpwent@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_endspent@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getgrent_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getgrgid_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getgrnam_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getpwent_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getpwnam_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getpwuid_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getspent_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_getspnam_r@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_initgroups_dyn@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_setgrent@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_setpwent@NSSPGSQL_2.0 1.4.0debian
+ _nss_pgsql_setspent@NSSPGSQL_2.0 1.4.0debian
