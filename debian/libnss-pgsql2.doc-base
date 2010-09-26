@@ -1,0 +1,10 @@
+Document: libnss-pgsql2
+Title: libnss-pgsql2 - NSS module for using PostgreSQL as a naming service
+Author: Jörg Wendland
+Abstract: libnss-pgsql2 is a NSS module for getting user, group and
+ shadow information from a PostgreSQL database instead of flat files.
+Section: System/Administration
+
+Format: HTML
+Index: /usr/share/doc/libnss-pgsql2/nss-pgsql.html
+Files: /usr/share/doc/libnss-pgsql2/nss-pgsql.html

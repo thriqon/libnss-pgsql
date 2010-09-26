@@ -15,6 +15,8 @@ libnss-pgsql (1.4.0debian-4) experimental; urgency=low
     - add ${misc:Depends} to Depends in debian/control
     - use simplified rules in debian/rules
   * add debian/libnss-pgsql2.symbols
+  * add debian/libnss-pgsql2.doc-base to register documentation with
+    doc-base
 
  -- Jan Dittberner <jandd@debian.org>  Sun, 26 Sep 2010 20:23:18 +0200
 
