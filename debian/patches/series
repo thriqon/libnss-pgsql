@@ -5,3 +5,4 @@
 05_schema_fixup.patch
 06_shadowconnstring_doc.patch
 07_fix_table_names.patch
+08_suppress_inappropriate_warnings.patch

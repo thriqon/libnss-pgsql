@@ -1,0 +1,17 @@
+Subject: disable warning "Could not connect to database" for users that cannot
+ access the shadowconnectionstring configuration by returning earlier
+Author: Jan Dittberner <jandd@debian.org>
+Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=525953
+
+--- a/src/backend.c
++++ b/src/backend.c
+@@ -74,6 +74,9 @@
+ 					PQfinish(_shadowconn);
+ 				}
+ 				_shadowconn = PQconnectdb(getcfg("shadowconnectionstring"));
++			} else {
++				// if configuration could not be read
++				return 0;
+ 			}
+ 
+ 			if(PQstatus(_shadowconn) == CONNECTION_OK) {
