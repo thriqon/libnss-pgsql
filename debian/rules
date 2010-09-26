@@ -2,9 +2,7 @@
 
 .PHONY: configure build install binary binary-indep binary-arch clean
 
-include /usr/share/quilt/quilt.make
-
-config.status: $(QUILT_STAMPFN)
+config.status:
 	dh_testdir
 	./configure \
 		--prefix=/usr \
@@ -21,7 +19,7 @@ build-stamp: config.status
 	$(MAKE)
 	touch $@
 
-clean: unpatch
+clean:
 	dh_testdir
 ifeq (Makefile, $(wildcard Makefile))
 	$(MAKE) distclean
