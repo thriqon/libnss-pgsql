@@ -17,3 +17,10 @@ Suggests: nscd, libpam-pgsql
 Description: NSS module for using PostgreSQL as a naming service
  This module works as a replacement for the flat file databases /etc/passwd,
  /etc/group etc. It is a plugin to glibc's name service switch.
+ .
+ The module uses tables in a PostgreSQL database to store user, group, and
+ shadow information. The module can be configured to use custom queries to
+ retrieve it's information from a database. The module allows to separate the
+ configuration for shadow information from group and user information to
+ restrict access to shadow information to privileged users (i.e. root or the
+ shadow group).
