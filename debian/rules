@@ -1,9 +1,6 @@
 #!/usr/bin/make -f
 
-.PHONY: configure build install binary binary-indep binary-arch clean
-
-config.status:
-	dh_testdir
+override_dh_auto_configure:
 	./configure \
 		--prefix=/usr \
 		--libdir=/lib \
@@ -12,49 +9,16 @@ config.status:
 		--with-docdir=\$${prefix}/share/doc/libnss-pgsql2 \
 		--sysconfdir=/etc
 
-build: build-stamp
-
-build-stamp: config.status
-	dh_testdir
-	$(MAKE)
-	touch $@
-
-clean:
-	dh_testdir
+override_dh_auto_clean:
 ifeq (Makefile, $(wildcard Makefile))
 	$(MAKE) distclean
 endif
-	dh_clean 
-	rm -f build-stamp install-stamp
 
-install: install-stamp
-
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_installdirs
+override_dh_install:
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/libnss-pgsql2
 	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.la
 	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.a
 	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.so
-	touch $@
 
-binary: binary-arch binary-indep
-
-binary-indep:
-
-binary-arch: build-stamp install-stamp
-	dh_testdir
-	dh_testroot
-	dh_installdocs
-	dh_installchangelogs debian/changelog
-	dh_installexamples
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+%:
+	dh $@

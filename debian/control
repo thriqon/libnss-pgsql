@@ -3,12 +3,12 @@ Section: admin
 Priority: extra
 Maintainer: Debian Nss/Pgsql Developers <nsspampgsql-devel@lists.alioth.debian.org>
 Uploaders: Christian Bayle <bayle@debian.org>, Stephen Gran <sgran@debian.org>, Martin Krafft <madduck@debian.org>, Jan Dittberner <jandd@debian.org>
-Build-Depends: debhelper (>= 5.0), libpq-dev, debiandoc-sgml, xmlto
+Build-Depends: debhelper (>= 7.0.50~), libpq-dev, debiandoc-sgml, xmlto
 Standards-Version: 3.7.2
 
 Package: libnss-pgsql2
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: libnss-pgsql1
 Replaces: libnss-pgsql1
 Provides: libnss-pgsql1
