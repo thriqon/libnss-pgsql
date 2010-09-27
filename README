@@ -1,0 +1,64 @@
+0. What's it about?
+-------------------------------------------------------------
+
+This is a so called Name Service Switch (NSS) Module for use with glibc.
+With it you can replace /etc/passwd, /etc/shadow, /etc/group etc. with
+a PostgreSQL database. Note that you need another piece of software, a
+plugin to the Pluggable Authentication Modules (PAM) that lets you
+authenticate against this database. It is also available from
+
+  http://sourceforge.net/projects/sysauth-pgsql
+
+1. Prerequisites
+-------------------------------------------------------------
+
+You will a current glibc (I tested on 2.2) and at least the PostgreSQL
+client library (libpq, version 7 or higher) on your system to use this
+module. Systems tested:
+
+ - Debian GNU/Linux 3.0 aka woody
+   just 'apt-get install libnss-pgsql1' from unstable :)
+
+ - RPMs for ... to come
+
+2. Installation
+-------------------------------------------------------------
+
+If you install from sources, follow these steps (general installation
+instructions on how to use the configure script, make and such can be
+found in the file INSTALL):
+
+ - Find the place where files called libnss_*.so are installed on
+   your system. In Debian this is /lib so I will use this.
+
+ - Decide where to put the configuration file. It is called nss-pgsql.conf
+   and I have it in /etc
+
+ - Run configure. My setup looks like this (note the paths):
+
+   ./configure --libdir=/lib --sysconfdir=/etc
+
+ - If configure doesn't complain about anything, you can type
+   'make' to compile the module
+
+ - As root type 'make install' to install the module to whatever
+   directory you gave as --libdir to configure.
+
+ - Have a look at conf/nss-pgsql.conf for a sample configfile.
+
+3. Setup your System
+-------------------------------------------------------------
+
+To use this module on your system make sure your nss-pgsql.conf is
+properly written. Then you can include the module in your
+/etc/nsswitch.conf. Look at conf/nsswitch.conf for an example.
+Don't forget to have a root console open before playing around
+with NSS because you can lock yourself out of your computer!
+
+4. Where to get more information
+-------------------------------------------------------------
+
+Consult the glibc documentation for more information on NSS.
+
+
+2001-10-04, Joerg
