@@ -6,6 +6,8 @@ Uploaders: Christian Bayle <bayle@debian.org>, Stephen Gran <sgran@debian.org>, 
 Build-Depends: debhelper (>= 7.0.50~), libpq-dev, debiandoc-sgml, xmlto
 Standards-Version: 3.9.1
 Homepage: https://alioth.debian.org/projects/nsspampgsql/
+Vcs-Git: git://git.debian.org/nsspampgsl/nsspampgsql.git
+Vcs-Browser: http://git.debian.org/?p=nsspampgsql/nsspampgsql.git
 
 Package: libnss-pgsql2
 Architecture: any

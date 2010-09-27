@@ -1,3 +1,9 @@
+libnss-pgsql (1.4.0debian-5) experimental; urgency=low
+
+  * Add Vcs-Git and Vcs-Browser fields to debian/control
+
+ -- Jan Dittberner <jandd@debian.org>  Mon, 27 Sep 2010 19:43:01 +0200
+
 libnss-pgsql (1.4.0debian-4) experimental; urgency=low
 
   * Add myself to uploaders.
