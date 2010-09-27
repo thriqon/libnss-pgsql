@@ -40,8 +40,7 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
 	autoconf/config.guess autoconf/config.sub autoconf/depcomp \
 	autoconf/install-sh autoconf/ltmain.sh autoconf/missing \
-	config.guess config.sub install-sh ltmain.sh missing \
-	mkinstalldirs
+	config.sub
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac

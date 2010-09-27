@@ -1,3 +1,9 @@
+libnss-pgsql (1.3) unstable; urgency=low
+
+  * Applied a patch to remove SIGBUS error on sparc (Closes: Bug#285431) 
+
+ -- Christian Bayle <bayle@debian.org>  Fri, 25 Mar 2005 22:58:54 +0100
+
 libnss-pgsql (1.2) unstable; urgency=low
 
   * Drop Debian revision from version

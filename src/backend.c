@@ -282,10 +282,15 @@ enum nss_status getgroupmem(gid_t gid,
 		goto BAIL_OUT;
 	}
 
+	/* realign the buffer on a 4-byte boundary */
+	buflen -= 4-((long)buffer & 0x3);
+	buffer += 4-((long)buffer & 0x3);
+
 	result->gr_mem = (char**)buffer;
 
-	buffer += ptrsize;
-	buflen -= ptrsize;
+	/* realign the buffer on a 4-byte boundary */
+	buffer += (ptrsize+3)&(~0x3);
+	buflen -= (ptrsize+3)&(~0x3);
 
 	status = NSS_STATUS_SUCCESS;
 
