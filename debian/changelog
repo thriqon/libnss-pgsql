@@ -1,3 +1,12 @@
+libnss-pgsql (1.2) unstable; urgency=low
+
+  * Drop Debian revision from version
+  * Modify res2pwd and res2gerp to set errnop to ERANGE if the buffer
+    we get from libc is too small. Based on a patch from Matthijs Bomhoff
+    and Jorik Jonker.
+
+ -- Wichert Akkerman <wichert@wiggy.net>  Mon, 21 Mar 2005 00:07:24 +0100
+
 libnss-pgsql (1.1-1) unstable; urgency=low
 
   * Move to forked source: this package is now maintained on Alioth

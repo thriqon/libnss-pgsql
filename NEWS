@@ -1,3 +1,9 @@
+1.2
+	* Modify res2pwd and res2gerp to set errnop to ERANGE if the buffer
+	  we get from libc is too small. Based on a patch from Matthijs Bomhoff
+	  and Jorik Jonker.
+	* Unfork again, instead change maintainership
+
 1.1
 	* Forked from the SourceForge project
 	* port to current autoconf & automake version
