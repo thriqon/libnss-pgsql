@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define _LIBC
+#define NOT_IN_libc
 #include <bits/libc-lock.h>
 
 static __libc_lock_t  lock;
@@ -29,8 +30,7 @@ _nss_pgsql_setpwent(void)
 		 backend_open();
   	 }
 	 if(backend_isopen()) {
-		 backend_prepare("passwd");
-		 retval = NSS_STATUS_SUCCESS;
+		 retval = backend_prepare_passwd();
 	 }
 	 __libc_lock_unlock(lock);
 
@@ -120,7 +120,7 @@ _nss_pgsql_setgrent(void)
 		 backend_open();
   	 }
 	 if(backend_isopen()) {
-		 backend_prepare("group");
+		 retval = backend_prepare_group();
 		 retval = NSS_STATUS_SUCCESS;
 	 }
 	 __libc_lock_unlock(lock);

@@ -1,6 +1,12 @@
+1.1
+	* Forked from the SourceForge project
+	* port to current autoconf & automake version
+	* Convert documentation to DocBook
+
+
 2001-10-04
- - this file has content :)
- - some info in README
- - huge stability patches by Bret
- - improvement for initgroups by Bret
- - we are in Debian/unstable as libnss-pgsql1 
+	* this file has content :)
+	* some info in README
+	* huge stability patches by Bret
+	* improvement for initgroups by Bret
+	* we are in Debian/unstable as libnss-pgsql1 
