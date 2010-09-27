@@ -1,5 +1,5 @@
 /**
- * $Id: util.c,v 1.3 2001/10/01 05:50:16 mogul Exp $
+ * $Id: util.c,v 1.2 2004/12/01 06:29:47 mr-russ Exp $
  *
  * public interface to libc
  *
@@ -36,49 +36,4 @@ void print_msg(const char *msg, ...)
 	va_end(ap);
 
 	fflush(stderr);
-}
-
-size_t sql_escape(const char *from, char *to, size_t len)
-{
-    const char *source = from;
-    char *target = to;
-    unsigned int remaining = len;
-
-    while (remaining > 0) {
-		  switch (*source) {
-		  case '\0':
-				*target = '\\';
-				target++;
-				*target = '0';
-				break;
-
-		  case '\\':
-				*target = '\\';
-				target++;
-				*target = '\\';
-				break;
-
-		  case '\'':
-				*target = '\\';
-				target++;
-				*target = '\'';
-				break;
-
-		  case '"':
-				*target = '\\';
-				target++;
-				*target = '"';
-				break;
-
-		  default:
-				*target = *source;
-		  }
-		  source++;
-		  target++;
-		  remaining--;
-    }
-
-    *target = '\0';
-
-    return target - to;
 }

@@ -15,16 +15,25 @@
 
 #  include <pwd.h>
 #  include <grp.h>
+#  include <shadow.h>
 #  include <sys/types.h>
 
-int readconfig(void);
+#define CFGFILE SYSCONFDIR"/nss-pgsql.conf"
+#define CFGROOTFILE SYSCONFDIR"/nss-pgsql-root.conf"
+
+/* define backend connection types */
+#define CONNECTION_SHADOW    's'
+#define CONNECTION_USERGROUP 'n'
+
+int readconfig(char type, char* configfile);
 void cleanup(void);
 char *getcfg(const char *key);
 
-int backend_isopen(void);
-int backend_open(void);
-void backend_close(void);
-enum nss_status backend_prepare(const char *what);
+int backend_isopen(char type);
+int backend_open(char type);
+void backend_close(char type);
+enum nss_status getent_prepare(const char *what);
+void getent_close(char type);
 
 enum nss_status backend_getpwent(struct passwd *result,
 											char *buffer,
@@ -62,16 +71,25 @@ size_t backend_initgroups_dyn(const char *user,
 										long int limit,
 										int *errnop);
 
-void groupcpy(struct group *dest, struct group *src);
-void passwdcpy(struct passwd *dest, struct passwd *src);
+enum nss_status backend_getspent(struct spwd *result,
+											char *buffer,
+											size_t buflen,
+											int *errnop);
+
+enum nss_status backend_getspnam(const char *name,
+											struct spwd *result,
+											char *buffer,
+											size_t buflen,
+											int *errnop);
+
 void print_err(const char *msg, ...);
 void print_msg(const char *msg, ...);
-size_t sql_escape(const char *from, char *to, size_t len);
 
+#define _C_  ,    /// Debug , to simulate vararg macros
 #  ifdef DEBUG
-#    define D(x) print_msg(x)
+#    define DebugPrint(x) print_msg(x)
 #  else
-#    define D(x)
+#    define DebugPrint(x)
 #  endif
 
 #endif

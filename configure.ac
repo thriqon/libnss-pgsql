@@ -1,9 +1,9 @@
 AC_PREREQ(2.59)
-AC_INIT([nsspgsql],[1.1],[libnsspgsql1@packages.debian.org])
-AC_CONFIG_AUX_DIR([autoconf])
+AC_INIT([nsspgsql],[1.4],[libnsspgsql1@packages.debian.org])
+AC_CONFIG_AUX_DIR(autoconf)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([AUTHORS])
-AC_CONFIG_HEADER([config.h])
+AM_CONFIG_HEADER(config.h)
 
 # Extra configure arguments
 AC_ARG_WITH(docdir,
