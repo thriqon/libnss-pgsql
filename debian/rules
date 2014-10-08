@@ -14,12 +14,15 @@ override_dh_auto_clean:
 ifeq (Makefile, $(wildcard Makefile))
 	$(MAKE) maintainer-clean
 endif
+	rm -rf INSTALL Makefile.in aclocal.m4 autoconf/ configure config.h.in \
+	       doc/Makefile.in src/Makefile.in
+
 
 override_dh_install:
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/libnss-pgsql2
-	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.la
-	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.a
-	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.so
+	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.la \
+	      $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.a \
+	      $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.so
 
 %:
 	dh $@ --with autotools_dev
