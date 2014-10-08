@@ -2,8 +2,18 @@ Source: libnss-pgsql
 Section: admin
 Priority: extra
 Maintainer: Debian Nss/Pgsql Developers <nsspampgsql-devel@lists.alioth.debian.org>
-Uploaders: Christian Bayle <bayle@debian.org>, Stephen Gran <sgran@debian.org>, Martin Krafft <madduck@debian.org>, Jan Dittberner <jandd@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), libpq-dev, debiandoc-sgml, xmlto, autotools-dev
+Uploaders: Christian Bayle <bayle@debian.org>,
+           Stephen Gran <sgran@debian.org>,
+           Martin Krafft <madduck@debian.org>,
+           Jan Dittberner <jandd@debian.org>
+Build-Depends: autoconf,
+               automake,
+               autotools-dev,
+               debhelper (>= 7.0.50~),
+               debiandoc-sgml,
+               libpq-dev,
+               libtool,
+               xmlto
 Standards-Version: 3.9.6
 Homepage: https://alioth.debian.org/projects/nsspampgsql/
 Vcs-Git: git://anonscm.debian.org/nsspampgsql/nsspampgsql.git
@@ -11,11 +21,11 @@ Vcs-Browser: http://anonscm.debian.org/cgit/nsspampgsql/nsspampgsql.git
 
 Package: libnss-pgsql2
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Conflicts: libnss-pgsql1
 Replaces: libnss-pgsql1
 Provides: libnss-pgsql1
-Suggests: nscd, libpam-pgsql
+Suggests: libpam-pgsql, nscd
 Description: NSS module for using PostgreSQL as a naming service
  This module works as a replacement for the flat file databases /etc/passwd,
  /etc/group etc. It is a plugin to glibc's name service switch.
