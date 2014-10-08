@@ -1,6 +1,7 @@
 libnss-pgsql (1.4.0debian-7) UNRELEASED; urgency=medium
 
   * change Homepage to pgfoundry.org
+  * switch Vcs-* fields to new collab-maint URLs
 
  -- Jan Dittberner <jandd@debian.org>  Wed, 08 Oct 2014 23:43:04 +0200
 
