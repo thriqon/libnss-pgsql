@@ -1,13 +1,51 @@
-This package was debianized by Joerg Wendland <jorgland@sol.wohnheim.uni-ulm.de>
-on Wed, Sep 12 19:19:55 2001 +0200
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: libnss-pgsql
+Source: http://sf.net/projects/sysauth-pgsql
 
-It was downloaded from http://sf.net/projects/sysauth-pgsql
+Files: *
+Copyright: 2000-2001 Joerg Wendland, Bret Mogilefsky
+           2005 Wichert Akkerman, Christian Bayle
+           2006 Russell Smith
+License: GPL-2
 
-Copyright.  The following copyright applies to the entire distribution:
+Files: doc/nss-pgsql.xml
+Copyright: 2000-2001 Joerg Wendland, Bret Mogilefsky
+           2005 Wichert Akkerman, Christian Bayle
+           2006 Russell Smith
+License: GFDL-1.1+
+ Permission is granted to copy, distribute and/or modify this document under
+ the terms of the GNU Free Documentation License, Version 1.1 or any later
+ version published by the Free Software Foundation. There are no invariant
+ sections.
+ .
+ On Debian systems, the full text of the GNU Free Documentation License can be
+ found in the file `/usr/share/common-licenses/GFDL'.
 
-    libnss-pgsql glibc name service switch module using PostgreSQL
-    Copyright (C) 2000-2001  Joerg Wendland, Bret Mogilefsky
-    Copyright (C) 2005       Wichert Akkerman, Christian Bayle
-    License is GNU General Public License
-    see /usr/share/common-licenses/GPL-2 for the full license text
+Files: debian/*
+Copyright: 2000-2001 Joerg Wendland, Bret Mogilefsky
+           2005 Wichert Akkerman, Christian Bayle
+           2007 Mark Hymers
+           2007-2008 Stephen Gran
+           2010-2014 Jan Dittberner <jandd@debian.org>
+License: GPL-2
 
+License: GPL-2
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
