@@ -26,11 +26,8 @@ AC_CHECK_LIB([pq], [PQsetdbLogin])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h nss.h pthread.h])
+AC_CHECK_HEADERS([stdlib.h string.h unistd.h nss.h])
 
-if test "x$ac_cv_header_pthread_h" = xyes; then
-  CFLAGS="$CFLAGS -lpthread"
-fi
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_UID_T
@@ -46,6 +43,5 @@ AC_CHECK_FUNCS([atexit strstr])
 # Pass some values on to the source
 AC_DEFINE_UNQUOTED(SYSCONFDIR, "$sysconfdir", [System configuration directory])
 
-AM_MAINTAINER_MODE
 AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
 AC_OUTPUT

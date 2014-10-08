@@ -1,3 +1,4 @@
+upstream-modifications.patch
 01_fix_locks.patch
 02_fix_retcode.patch
 03_fix_errno.patch

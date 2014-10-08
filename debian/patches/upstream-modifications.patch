@@ -1,0 +1,57 @@
+Subject: This patch bundles Debian modifications to the latest upstream version.
+Author: Jan Dittberner <jandd@debian.org>
+--- a/configure.ac
++++ b/configure.ac
+@@ -26,8 +26,11 @@
+ 
+ # Checks for header files.
+ AC_HEADER_STDC
+-AC_CHECK_HEADERS([stdlib.h string.h unistd.h nss.h])
++AC_CHECK_HEADERS([stdlib.h string.h unistd.h nss.h pthread.h])
+ 
++if test "x$ac_cv_header_pthread_h" = xyes; then
++  CFLAGS="$CFLAGS -lpthread"
++fi
+ # Checks for typedefs, structures, and compiler characteristics.
+ AC_C_CONST
+ AC_TYPE_UID_T
+@@ -43,5 +46,6 @@
+ # Pass some values on to the source
+ AC_DEFINE_UNQUOTED(SYSCONFDIR, "$sysconfdir", [System configuration directory])
+ 
++AM_MAINTAINER_MODE
+ AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
+ AC_OUTPUT
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,5 +1,5 @@
+ lib_LTLIBRARIES = libnss_pgsql.la
+ libnss_pgsql_la_SOURCES = interface.c config.c backend.c util.c
+-libnss_pgsql_la_LDFLAGS = -module -version-info 2
+-EXTRA_DIST = nss-pgsql.h
++libnss_pgsql_la_LDFLAGS = -module -version-info 2 -Wl,--version-script=$(srcdir)/libnss_pgsql.map
++EXTRA_DIST = nss-pgsql.h libnss_pqsql.map
+ 
+--- /dev/null
++++ b/src/libnss_pgsql.map
+@@ -0,0 +1,20 @@
++NSSPGSQL_2.0 {
++  global:
++    _nss_pgsql_setpwent;
++    _nss_pgsql_endpwent;
++    _nss_pgsql_getpwent_r;
++    _nss_pgsql_getpwnam_r;
++    _nss_pgsql_getpwuid_r;
++    _nss_pgsql_setgrent;
++    _nss_pgsql_endgrent;
++    _nss_pgsql_getgrent_r;
++    _nss_pgsql_getgrnam_r;
++    _nss_pgsql_getgrgid_r;
++    _nss_pgsql_initgroups_dyn;
++    _nss_pgsql_setspent;
++    _nss_pgsql_endspent;
++    _nss_pgsql_getspent_r;
++    _nss_pgsql_getspnam_r;
++  local:
++    *;
++};
