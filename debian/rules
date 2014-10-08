@@ -21,4 +21,4 @@ override_dh_install:
 	rm -f $(CURDIR)/debian/libnss-pgsql2/lib/libnss_pgsql.so
 
 %:
-	dh $@
+	dh $@ --with autotools_dev
