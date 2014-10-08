@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian Nss/Pgsql Developers <nsspampgsql-devel@lists.alioth.debian.org>
 Uploaders: Christian Bayle <bayle@debian.org>, Stephen Gran <sgran@debian.org>, Martin Krafft <madduck@debian.org>, Jan Dittberner <jandd@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), libpq-dev, debiandoc-sgml, xmlto
-Standards-Version: 3.9.1
+Standards-Version: 3.9.6
 Homepage: https://alioth.debian.org/projects/nsspampgsql/
 Vcs-Git: git://anonscm.debian.org/nsspampgsql/nsspampgsql.git
 Vcs-Browser: http://anonscm.debian.org/cgit/nsspampgsql/nsspampgsql.git
