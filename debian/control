@@ -4,7 +4,6 @@ Priority: extra
 Maintainer: Debian Nss/Pgsql Developers <nsspampgsql-devel@lists.alioth.debian.org>
 Uploaders: Christian Bayle <bayle@debian.org>,
            Stephen Gran <sgran@debian.org>,
-           Martin Krafft <madduck@debian.org>,
            Jan Dittberner <jandd@debian.org>
 Build-Depends: autoconf,
                automake,
