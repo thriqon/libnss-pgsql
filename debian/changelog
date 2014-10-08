@@ -13,6 +13,7 @@ libnss-pgsql (1.4.0debian-6) UNRELEASED; urgency=medium
   * use wrap-and-sort on debian/control
   * switch to debhelper (>= 9) in debian/control and bump debian/compat level
     to 9 to add hardening flags automatically
+  * debian/control: fix spelling error in description
 
  -- Jan Dittberner <jandd@debian.org>  Wed, 08 Oct 2014 20:07:01 +0200
 
