@@ -1,10 +1,9 @@
 Source: libnss-pgsql
 Section: admin
 Priority: extra
-Maintainer: Debian Nss/Pgsql Developers <nsspampgsql-devel@lists.alioth.debian.org>
+Maintainer: Jan Dittberner <jandd@debian.org>
 Uploaders: Christian Bayle <bayle@debian.org>,
-           Stephen Gran <sgran@debian.org>,
-           Jan Dittberner <jandd@debian.org>
+           Stephen Gran <sgran@debian.org>
 Build-Depends: autoconf,
                automake,
                autotools-dev,
