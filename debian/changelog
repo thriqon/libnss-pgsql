@@ -2,6 +2,7 @@ libnss-pgsql (1.4.0debian-8) UNRELEASED; urgency=medium
 
   * debian/control: set myself as Maintainer because the team list does
     not exist anymore (Closes: #764680)
+  * include full GFDL-1.1 text in debian/copyright
 
  -- Jan Dittberner <jandd@debian.org>  Fri, 10 Oct 2014 17:53:11 +0200
 
